@@ -1,0 +1,9 @@
+{
+  "name": "PulaPay",
+  "short_name": "PulaPay",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3eee9",
+  "theme_color": "#ff7a1a",
+  "icons": []
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PulaPay — Student Wallet</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="/styles.css" />
+  <meta name="theme-color" content="#ff7a1a" />
+</head>
+<body>
+  <div class="bg-orb orb-1"></div><div class="bg-orb orb-2"></div><div class="bg-orb orb-3"></div>
+
+  <main id="app" class="app">
+    <!-- Auth -->
+    <section class="card auth" id="authCard">
+      <header class="auth__header">
+        <div class="brand"><span class="brand__dot"></span><span class="brand__name">PulaPay</span></div>
+        <button class="btn ghost sm" id="goToSignUp" type="button">Sign up</button>
+      </header>
+      <h1 class="auth__title">Log in</h1>
+      <form id="loginForm" class="form">
+        <label class="input">
+          <span class="input__label">e-mail address</span>
+          <input id="email" type="email" required placeholder="you@ub.ac.bw" />
+        </label>
+        <label class="input">
+          <span class="input__label">password</span>
+          <input id="password" type="password" required minlength="6" placeholder="••••••••" />
+          <button class="link sm" type="button" id="forgotBtn">I forgot</button>
+        </label>
+        <button class="btn primary" type="submit">Log in</button>
+        <button class="btn neutral" type="button" id="demoLogin">Try demo</button>
+      </form>
+      <p class="fineprint">Demo only. Not a bank account.</p>
+    </section>
+
+    <!-- Dashboard -->
+    <section class="card dash hidden" id="dashCard" aria-live="polite">
+      <header class="dash__header">
+        <div class="pill date-pill"><div class="dow" id="dow">Thu</div><div class="dom" id="dom">24<span class="th">th</span></div></div>
+        <div class="event"><p class="kicker">Student payments</p><h2 class="event__title">Pay tuition or rent</h2></div>
+        <button class="btn ghost sm" id="logoutBtn" type="button">Log out</button>
+      </header>
+
+      <section class="balance">
+        <div class="balance__orb"></div>
+        <div class="balance__meta">
+          <p class="caption muted">Wallet balance</p>
+          <div class="balance__amount"><span class="cur">P</span><span id="balanceNum">0.00</span></div>
+        </div>
+        <div class="balance__actions">
+          <button class="chip" data-action="send">Send</button>
+          <button class="chip" data-action="request">Request</button>
+          <button class="chip" data-action="tuition">Tuition</button>
+          <button class="chip" data-action="rent">Rent</button>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="tile wide"><h3 class="tile__title">New in PulaPay</h3><p class="tile__desc">UB payments, instant transfers.</p></article>
+        <article class="tile action" data-action="send"><h4>Send money</h4><p class="caption">Phone / email / student ID</p></article>
+        <article class="tile action" data-action="tuition"><h4>Pay tuition</h4><p class="caption">University of Botswana</p></article>
+        <article class="tile action" data-action="rent"><h4>Pay rent</h4><p class="caption">Verified landlords</p></article>
+      </section>
+
+      <section class="list">
+        <h3 class="section__title">Recent activity</h3>
+        <ul id="activityList" class="activity"></ul>
+      </section>
+    </section>
+
+    <!-- Modal -->
+    <dialog id="flowDialog" class="dialog">
+      <form method="dialog" class="flow">
+        <header class="flow__header">
+          <h3 id="flowTitle">Quick action</h3>
+          <button class="btn icon" value="cancel" aria-label="Close">✕</button>
+        </header>
+        <div class="flow__body" id="flowBody"></div>
+        <footer class="flow__footer">
+          <button class="btn neutral" value="cancel">Cancel</button>
+          <button class="btn primary" id="flowSubmit" value="default">Continue</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" hidden></div>
+  </main>
+
+  <!-- Firebase SDK via ESM -->
+  <script type="module" src="/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }
+  </script>
+</body>
+</html>
