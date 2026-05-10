@@ -2,11 +2,15 @@
   "name": "Nimbus-Habor",
   "short_name": "Habor",
   "description": "Student accommodation discovery, receipts, messaging, and landlord trust for Gaborone.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": ".",
+  "scope": ".",
   "display": "standalone",
   "background_color": "#fffaf2",
   "theme_color": "#5f7255",
-  "categories": ["housing", "education", "productivity"],
+  "categories": [
+    "housing",
+    "education",
+    "productivity"
+  ],
   "icons": []
 }

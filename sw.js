@@ -1,8 +1,13 @@
-const CACHE = 'nimbus-habor-v6';
-const ASSETS = ['/', '/index.html', '/styles.css', '/app.js', '/manifest.json'];
+const CACHE = 'nimbus-habor-v7';
+const ASSETS = ['.', 'index.html', 'styles.css', 'app.js', 'manifest.json'];
+const APP_SHELL = new URL('index.html', self.location.href).href;
+
+function assetUrl(path) {
+  return new URL(path, self.location.href).href;
+}
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS.map(assetUrl))));
   self.skipWaiting();
 });
 
@@ -16,6 +21,6 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request).catch(() => caches.match('/index.html')))
+    caches.match(event.request).then(response => response || fetch(event.request).catch(() => caches.match(APP_SHELL)))
   );
 });
