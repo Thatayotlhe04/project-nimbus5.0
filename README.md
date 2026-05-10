@@ -19,6 +19,8 @@ create table waitlist_leads (
   campus_preference text,
   budget_preference text,
   move_in_preference text,
+  accommodation_preference text,
+  source text not null default 'landing_page',
   created_at timestamptz not null default now()
 );
 ```
@@ -42,3 +44,7 @@ The landing page can write directly to Supabase REST when these values are provi
 ```
 
 If the values are not present, the form keeps the preview experience working by saving the most recent lead locally in the browser.
+
+## Recommended RLS
+
+The full starter SQL, including row-level security policies that allow public inserts while keeping submitted leads private, lives in `supabase/schema.sql`.

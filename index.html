@@ -34,6 +34,7 @@
       <a class="nav-pill" href="#safety">Safety</a>
       <a class="nav-pill" href="#preview">Preview</a>
       <a class="nav-pill" href="#supabase">Database</a>
+      <a class="nav-pill" href="#roadmap">Roadmap</a>
       <a class="nav-pill" href="#landlords">Landlords</a>
       <a class="portal-pill" href="#contact">Early access</a>
     </div>
@@ -100,6 +101,14 @@
               <option>Immediately</option>
               <option>Next month</option>
               <option>Next semester</option>
+            </select>
+          </label>
+          <label>Space
+            <select name="accommodationType">
+              <option>Room</option>
+              <option>Shared house</option>
+              <option>Apartment</option>
+              <option>Still deciding</option>
             </select>
           </label>
           <button class="btn primary mini-search" type="submit">Match me</button>
@@ -234,7 +243,7 @@
       <div>
         <p class="eyebrow">Supabase foundation</p>
         <h2 id="dataTitle">Built around a real accommodation database.</h2>
-        <p>Nimbus will use Supabase for waitlist leads first, then for student profiles, landlord profiles, accommodation posts, messages, reviews, receipts, and policy records as the product grows.</p>
+        <p>Nimbus will use Supabase for waitlist leads first, then for student profiles, landlord profiles, accommodation posts, messages, reviews, receipts, and policy records as the product grows. Row-level security keeps lead data private while still allowing public signups.</p>
       </div>
       <div class="data-grid" aria-label="Planned Supabase tables">
         <span>waitlist_leads</span>
@@ -245,6 +254,20 @@
         <span>receipts</span>
         <span>reviews</span>
         <span>policy_records</span>
+        <span>rls_policies</span>
+      </div>
+    </section>
+
+    <section class="section-shell roadmap-section" id="roadmap" aria-labelledby="roadmapTitle">
+      <div class="section-heading centered">
+        <p class="eyebrow">Launch roadmap</p>
+        <h2 id="roadmapTitle">Build trust before scale.</h2>
+        <p>Nimbus should earn student confidence in stages instead of launching with weak data or fake supply.</p>
+      </div>
+      <div class="roadmap-grid">
+        <article><span>Phase 1</span><h3>Waitlist + student interviews</h3><p>Collect Supabase leads, learn the most stressful rental issues, and map high-demand campus zones.</p></article>
+        <article><span>Phase 2</span><h3>Verified landlord intake</h3><p>Bring in landlords with clear deposit, utility, and house-rule requirements before posts go public.</p></article>
+        <article><span>Phase 3</span><h3>Messaging + receipts</h3><p>Launch the core student workflow: contact, confirm terms, store receipts, and keep stay records.</p></article>
       </div>
     </section>
 
@@ -360,7 +383,9 @@
         <label>Phone / WhatsApp<input type="tel" name="phone" placeholder="+267 ..." autocomplete="tel"></label>
         <label>I am a<select name="role"><option>Student</option><option>Landlord</option><option>University partner</option><option>Parent / guardian</option></select></label>
         <label>Message<textarea name="message" rows="4" placeholder="Tell us what you need from Nimbus"></textarea></label>
+        <label class="consent-check"><input type="checkbox" name="consent" required> I agree that Nimbus can store my waitlist details and contact me about early access.</label>
         <button class="btn primary" type="submit">Join the waitlist</button>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
       </form>
     </section>
 
@@ -401,6 +426,7 @@
 
   <div class="toast" id="toast" role="status" hidden></div>
 
+  <noscript><p class="noscript-note">Nimbus works best with JavaScript enabled so the waitlist and quick-match preview can save your preferences.</p></noscript>
   <script src="/app.js" defer></script>
   <script>
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }

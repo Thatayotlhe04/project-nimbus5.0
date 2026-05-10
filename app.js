@@ -6,6 +6,7 @@ const toast = document.querySelector('#toast');
 const cookieBanner = document.querySelector('#cookieBanner');
 const acceptCookies = document.querySelector('#acceptCookies');
 const dismissCookies = document.querySelector('#dismissCookies');
+const formStatus = document.querySelector('#formStatus');
 const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
 
 const supabaseConfig = {
@@ -30,7 +31,15 @@ const storage = {
   }
 };
 
-let latestSearch = {};
+function readStoredSearch() {
+  try {
+    return JSON.parse(storage.get('nimbusLatestSearch') || '{}');
+  } catch {
+    return {};
+  }
+}
+
+let latestSearch = readStoredSearch();
 
 function showToast(message) {
   if (!toast) return;
@@ -42,19 +51,44 @@ function showToast(message) {
   }, 4200);
 }
 
+function setFormStatus(message, state = 'idle') {
+  if (!formStatus) return;
+  formStatus.textContent = message;
+  formStatus.dataset.state = state;
+}
+
+function setFormBusy(isBusy) {
+  const submitButton = contactForm?.querySelector('button[type="submit"]');
+  if (!submitButton) return;
+  submitButton.disabled = isBusy;
+  submitButton.textContent = isBusy ? 'Saving...' : 'Join the waitlist';
+}
+
 function closeMenu() {
   navLinks?.classList.remove('is-open');
   menuToggle?.setAttribute('aria-expanded', 'false');
 }
 
-async function saveWaitlistLead(payload) {
-  const normalizedPayload = {
-    ...payload,
-    created_at: new Date().toISOString()
+function normalizeLeadPayload(payload) {
+  return {
+    name: payload.name?.trim(),
+    email: payload.email?.trim().toLowerCase(),
+    phone: payload.phone?.trim() || null,
+    role: payload.role,
+    message: payload.message?.trim() || null,
+    campus_preference: payload.campus_preference || null,
+    budget_preference: payload.budget_preference || null,
+    move_in_preference: payload.move_in_preference || null,
+    accommodation_preference: payload.accommodation_preference || null,
+    source: 'landing_page'
   };
+}
+
+async function saveWaitlistLead(payload) {
+  const normalizedPayload = normalizeLeadPayload(payload);
 
   if (!supabaseConfig.url || !supabaseConfig.anonKey) {
-    storage.set('nimbusWaitlistLead', JSON.stringify(normalizedPayload));
+    storage.set('nimbusWaitlistLead', JSON.stringify({ ...normalizedPayload, created_at: new Date().toISOString() }));
     return { mode: 'local' };
   }
 
@@ -93,36 +127,51 @@ quickSearch?.addEventListener('submit', (event) => {
   latestSearch = {
     campus_preference: formData.get('campus'),
     budget_preference: formData.get('budget'),
-    move_in_preference: formData.get('moveIn')
+    move_in_preference: formData.get('moveIn'),
+    accommodation_preference: formData.get('accommodationType')
   };
   storage.set('nimbusLatestSearch', JSON.stringify(latestSearch));
-  showToast(`Early AI match saved: ${latestSearch.campus_preference}, ${latestSearch.budget_preference} budget preference, ${latestSearch.move_in_preference}. Join the waitlist for launch access.`);
+  showToast(`Early AI match saved: ${latestSearch.campus_preference}, ${latestSearch.budget_preference} budget preference, ${latestSearch.accommodation_preference}, ${latestSearch.move_in_preference}. Join the waitlist for launch access.`);
   document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setFormStatus('Your search preferences will be attached when you join the waitlist.', 'info');
   window.setTimeout(() => contactForm?.querySelector('input[name="name"]')?.focus(), 650);
 });
 
 contactForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   const formData = new FormData(contactForm);
-  const name = formData.get('name') || 'there';
-  const role = formData.get('role') || 'supporter';
+  if (formData.get('consent') !== 'on') {
+    setFormStatus('Please confirm consent before joining the waitlist.', 'error');
+    return;
+  }
+
+  const name = formData.get('name')?.toString() || 'there';
+  const role = formData.get('role')?.toString() || 'supporter';
   const payload = {
-    name: name.toString(),
+    name,
     email: formData.get('email')?.toString() || '',
     phone: formData.get('phone')?.toString() || '',
-    role: role.toString(),
+    role,
     message: formData.get('message')?.toString() || '',
     ...latestSearch
   };
+
+  setFormBusy(true);
+  setFormStatus('Saving your interest...', 'loading');
 
   try {
     const result = await saveWaitlistLead(payload);
     contactForm.reset();
     const savedWhere = result.mode === 'supabase' ? 'Supabase waitlist' : 'local preview waitlist';
-    showToast(`Thanks ${name}! Your ${role.toString().toLowerCase()} interest is saved to the ${savedWhere}.`);
+    const successMessage = `Thanks ${name}! Your ${role.toLowerCase()} interest is saved to the ${savedWhere}.`;
+    setFormStatus(successMessage, 'success');
+    showToast(successMessage);
   } catch (error) {
-    storage.set('nimbusWaitlistLead', JSON.stringify(payload));
+    storage.set('nimbusWaitlistLead', JSON.stringify({ ...normalizeLeadPayload(payload), created_at: new Date().toISOString() }));
+    setFormStatus('Supabase is not reachable right now, so your interest was saved locally for this preview.', 'warning');
     showToast('Supabase is not reachable right now, so your interest was saved locally for this preview.');
+  } finally {
+    setFormBusy(false);
   }
 });
 

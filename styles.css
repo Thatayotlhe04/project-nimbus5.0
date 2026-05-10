@@ -519,3 +519,85 @@ textarea { resize: vertical; }
   .data-panel, .reviews-section { margin-bottom: 3rem; }
   .reviews-grid { grid-template-columns: 1fr; }
 }
+
+.roadmap-section {
+  margin-bottom: 5rem;
+}
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.roadmap-grid article {
+  position: relative;
+  padding: 1.35rem;
+  border: 2px solid rgba(60, 51, 45, .16);
+  border-radius: var(--radius);
+  background: rgba(255, 250, 242, .9);
+  box-shadow: var(--shadow);
+}
+.roadmap-grid article::after {
+  content: "";
+  position: absolute;
+  inset: auto 1.35rem 1.05rem;
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--sage), var(--gold));
+}
+.roadmap-grid span {
+  display: inline-flex;
+  margin-bottom: .9rem;
+  padding: .35rem .7rem;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: var(--mint);
+  color: var(--sage-dark);
+  font-weight: 900;
+}
+.consent-check {
+  display: flex !important;
+  grid-template-columns: none !important;
+  align-items: flex-start;
+  gap: .65rem !important;
+  color: var(--muted) !important;
+  font-weight: 700 !important;
+}
+.consent-check input {
+  width: auto;
+  margin-top: .25rem;
+  accent-color: var(--sage);
+}
+.form-status {
+  min-height: 1.4rem;
+  margin: 0;
+  font-weight: 800;
+}
+.form-status[data-state="success"] { color: var(--sage-dark); }
+.form-status[data-state="error"],
+.form-status[data-state="warning"] { color: #8b3f2f; }
+.form-status[data-state="loading"],
+.form-status[data-state="info"] { color: var(--muted); }
+.noscript-note {
+  max-width: 760px;
+  margin: 1rem auto;
+  padding: 1rem;
+  border: 2px solid var(--line);
+  border-radius: 20px;
+  background: white;
+  color: var(--ink);
+  text-align: center;
+  font-weight: 800;
+}
+button:disabled {
+  cursor: wait;
+  opacity: .72;
+  transform: none !important;
+}
+
+@media (max-width: 980px) {
+  .roadmap-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .roadmap-section { margin-bottom: 3rem; }
+}
