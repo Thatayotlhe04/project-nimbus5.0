@@ -10,8 +10,8 @@ const formStatus = document.querySelector('#formStatus');
 const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
 
 const supabaseConfig = {
-  url: window.NIMBUS_SUPABASE_URL || document.querySelector('meta[name="supabase-url"]')?.content || '',
-  anonKey: window.NIMBUS_SUPABASE_ANON_KEY || document.querySelector('meta[name="supabase-anon-key"]')?.content || ''
+  url: window.NIMBUSHABOR_SUPABASE_URL || window.NIMBUS_SUPABASE_URL || document.querySelector('meta[name="supabase-url"]')?.content || '',
+  anonKey: window.NIMBUSHABOR_SUPABASE_ANON_KEY || window.NIMBUS_SUPABASE_ANON_KEY || document.querySelector('meta[name="supabase-anon-key"]')?.content || ''
 };
 
 const storage = {
@@ -33,7 +33,7 @@ const storage = {
 
 function readStoredSearch() {
   try {
-    return JSON.parse(storage.get('nimbusLatestSearch') || '{}');
+    return JSON.parse(storage.get('nimbushaborLatestSearch') || '{}');
   } catch {
     return {};
   }
@@ -88,7 +88,7 @@ async function saveWaitlistLead(payload) {
   const normalizedPayload = normalizeLeadPayload(payload);
 
   if (!supabaseConfig.url || !supabaseConfig.anonKey) {
-    storage.set('nimbusWaitlistLead', JSON.stringify({ ...normalizedPayload, created_at: new Date().toISOString() }));
+    storage.set('nimbushaborWaitlistLead', JSON.stringify({ ...normalizedPayload, created_at: new Date().toISOString() }));
     return { mode: 'local' };
   }
 
@@ -130,7 +130,7 @@ quickSearch?.addEventListener('submit', (event) => {
     move_in_preference: formData.get('moveIn'),
     accommodation_preference: formData.get('accommodationType')
   };
-  storage.set('nimbusLatestSearch', JSON.stringify(latestSearch));
+  storage.set('nimbushaborLatestSearch', JSON.stringify(latestSearch));
   showToast(`Early AI match saved: ${latestSearch.campus_preference}, ${latestSearch.budget_preference} budget preference, ${latestSearch.accommodation_preference}, ${latestSearch.move_in_preference}. Join the waitlist for launch access.`);
   document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   setFormStatus('Your search preferences will be attached when you join the waitlist.', 'info');
@@ -167,20 +167,20 @@ contactForm?.addEventListener('submit', async (event) => {
     setFormStatus(successMessage, 'success');
     showToast(successMessage);
   } catch (error) {
-    storage.set('nimbusWaitlistLead', JSON.stringify({ ...normalizeLeadPayload(payload), created_at: new Date().toISOString() }));
-    setFormStatus('Supabase is not reachable right now, so your interest was saved locally for this preview.', 'warning');
-    showToast('Supabase is not reachable right now, so your interest was saved locally for this preview.');
+    storage.set('nimbushaborWaitlistLead', JSON.stringify({ ...normalizeLeadPayload(payload), created_at: new Date().toISOString() }));
+    setFormStatus('Supabase is not reachable right now, so your Nimbus-Habor interest was saved locally for this preview.', 'warning');
+    showToast('Supabase is not reachable right now, so your Nimbus-Habor interest was saved locally for this preview.');
   } finally {
     setFormBusy(false);
   }
 });
 
-if (cookieBanner && storage.get('nimbusCookieOK') !== 'true') {
+if (cookieBanner && storage.get('nimbushaborCookieOK') !== 'true') {
   cookieBanner.hidden = false;
 }
 
 function saveCookiePreference(message) {
-  storage.set('nimbusCookieOK', 'true');
+  storage.set('nimbushaborCookieOK', 'true');
   if (cookieBanner) cookieBanner.hidden = true;
   showToast(message);
 }

@@ -1,10 +1,10 @@
-# Nimbus Student Stay
+# Nimbus-Habor
 
-Nimbus is a landing page and early-access concept for student accommodation around Gaborone, Botswana.
+Nimbus-Habor is a landing page and early-access concept for student accommodation around Gaborone, Botswana.
 
 ## Database direction
 
-Nimbus is planned around Supabase, not Firebase. The first production table should capture waitlist interest, then the schema can expand into student profiles, landlord profiles, accommodation posts, messages, receipts, reviews, and policy records.
+Nimbus-Habor is planned around Supabase, not Firebase. The first production table should capture waitlist interest, then the schema can expand into student profiles, landlord profiles, accommodation posts, messages, receipts, reviews, and policy records.
 
 Suggested initial table:
 
@@ -38,12 +38,12 @@ The landing page can write directly to Supabase REST when these values are provi
 
 ```html
 <script>
-  window.NIMBUS_SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
-  window.NIMBUS_SUPABASE_ANON_KEY = 'YOUR_PUBLIC_ANON_KEY';
+  window.NIMBUSHABOR_SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+  window.NIMBUSHABOR_SUPABASE_ANON_KEY = 'YOUR_PUBLIC_ANON_KEY';
 </script>
 ```
 
-If the values are not present, the form keeps the preview experience working by saving the most recent lead locally in the browser.
+The older `window.NIMBUS_SUPABASE_URL` and `window.NIMBUS_SUPABASE_ANON_KEY` names are still accepted as fallbacks. If the values are not present, the form keeps the preview experience working by saving the most recent lead locally in the browser.
 
 ## Recommended RLS
 

@@ -1,4 +1,4 @@
--- Nimbus Student Stay initial Supabase schema.
+-- Nimbus-Habor initial Supabase schema.
 -- Run this in the Supabase SQL editor before wiring the public anon key into the landing page.
 
 create extension if not exists pgcrypto;
