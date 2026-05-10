@@ -3,93 +3,367 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PulaPay — Student Wallet</title>
+  <meta name="description" content="Nimbus helps university students around Gaborone find fair, trusted accommodation with verified landlords, rent receipts, messaging, ratings, and student-first protection." />
+  <title>Nimbus Stay — Student Accommodation in Gaborone</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="stylesheet" href="/styles.css" />
-  <meta name="theme-color" content="#ff7a1a" />
+  <meta name="theme-color" content="#5f7255" />
+  <meta name="apple-mobile-web-app-title" content="Nimbus" />
+  <meta property="og:title" content="Nimbus Stay — Student Accommodation in Gaborone" />
+  <meta property="og:description" content="Find verified student rooms, keep rental receipts, and rate landlords around Gaborone." />
 </head>
 <body>
-  <div class="bg-orb orb-1"></div><div class="bg-orb orb-2"></div><div class="bg-orb orb-3"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <main id="app" class="app">
-    <!-- Auth -->
-    <section class="card auth" id="authCard">
-      <header class="auth__header">
-        <div class="brand"><span class="brand__dot"></span><span class="brand__name">PulaPay</span></div>
-        <button class="btn ghost sm" id="goToSignUp" type="button">Sign up</button>
-      </header>
-      <h1 class="auth__title">Log in</h1>
-      <form id="loginForm" class="form">
-        <label class="input">
-          <span class="input__label">e-mail address</span>
-          <input id="email" type="email" required placeholder="you@ub.ac.bw" />
-        </label>
-        <label class="input">
-          <span class="input__label">password</span>
-          <input id="password" type="password" required minlength="6" placeholder="••••••••" />
-          <button class="link sm" type="button" id="forgotBtn">I forgot</button>
-        </label>
-        <button class="btn primary" type="submit">Log in</button>
-        <button class="btn neutral" type="button" id="demoLogin">Try demo</button>
-      </form>
-      <p class="fineprint">Demo only. Not a bank account.</p>
+  <header class="top-alert" aria-label="Safety promise">
+    <span class="alert-icon" aria-hidden="true">📣</span>
+    <span><strong>STUDENT SAFETY</strong> | Verified rooms, fair deposits, and searchable receipts for Gaborone campuses</span>
+  </header>
+
+  <nav class="site-nav" aria-label="Primary navigation">
+    <a class="brand" href="#home" aria-label="Nimbus Stay home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 48" role="img" aria-label="House roof icon"><path d="M5 28 31 7l28 21h-9v16H15V28H5Z"/><path d="M27 44V30h11v14"/><path d="M23 22h6v6h-6zm11 0h6v6h-6z"/></svg>
+      </span>
+      <span class="brand-copy"><span>Nimbus</span><small>Student Stay</small></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navLinks">Menu</button>
+    <div class="nav-links" id="navLinks">
+      <a class="nav-pill" href="#about">About</a>
+      <a class="nav-pill" href="#properties">Properties</a>
+      <a class="nav-pill" href="#safety">Safety</a>
+      <a class="nav-pill" href="#preview">Preview</a>
+      <a class="nav-pill" href="#landlords">Landlords</a>
+      <a class="portal-pill" href="#contact">Early access</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="hero section-shell" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow">Student accommodation around UB, BUAN, Botho & Limkokwing</p>
+        <h1>Rent near campus with receipts, ratings, and less stress.</h1>
+        <p class="hero-lead">Nimbus is a student-first accommodation platform for Gaborone. Compare verified rooms, message landlords in-app, keep rental proof, and review landlords so bad behaviour stops spreading quietly.</p>
+        <div class="hero-actions" id="join">
+          <a class="btn primary" href="#properties">Explore student rentals</a>
+          <a class="btn secondary" href="#landlords">I’m a landlord</a>
+        </div>
+        <div class="trust-row" aria-label="Platform highlights">
+          <span>Deposit clarity</span>
+          <span>Verified listings</span>
+          <span>Student points</span>
+          <span>Landlord accountability</span>
+        </div>
+      </div>
+
+      <div class="hero-panel" aria-label="Nimbus accommodation preview">
+        <div class="hero-art" aria-label="Illustration of students outside accommodation">
+          <div class="building-card">
+            <div class="sun"></div>
+            <div class="building">
+              <div class="roof"></div>
+              <div class="window window-a"><span></span><span></span></div>
+              <div class="window window-b"><span></span><span></span></div>
+              <div class="door"></div>
+              <div class="plant plant-left"></div>
+              <div class="plant plant-right"></div>
+            </div>
+            <div class="student-group">
+              <span class="student s1"></span>
+              <span class="student s2"></span>
+              <span class="student s3"></span>
+              <span class="student s4"></span>
+            </div>
+            <div class="floating-note note-one">P1,850/mo</div>
+            <div class="floating-note note-two">4.8 ★ Trust</div>
+          </div>
+        </div>
+        <form class="quick-search" id="quickSearch" aria-label="Quick accommodation search">
+          <label>Campus
+            <select name="campus">
+              <option>University of Botswana</option>
+              <option>BUAN</option>
+              <option>Botho University</option>
+              <option>Limkokwing Gaborone</option>
+            </select>
+          </label>
+          <label>Budget
+            <select name="budget">
+              <option>Under P1,500</option>
+              <option>P1,500 - P2,500</option>
+              <option>P2,500 - P4,000</option>
+            </select>
+          </label>
+          <label>Move-in
+            <select name="moveIn">
+              <option>Immediately</option>
+              <option>Next month</option>
+              <option>Next semester</option>
+            </select>
+          </label>
+          <button class="btn primary mini-search" type="submit">Match me</button>
+        </form>
+      </div>
     </section>
 
-    <!-- Dashboard -->
-    <section class="card dash hidden" id="dashCard" aria-live="polite">
-      <header class="dash__header">
-        <div class="pill date-pill"><div class="dow" id="dow">Thu</div><div class="dom" id="dom">24<span class="th">th</span></div></div>
-        <div class="event"><p class="kicker">Student payments</p><h2 class="event__title">Pay tuition or rent</h2></div>
-        <button class="btn ghost sm" id="logoutBtn" type="button">Log out</button>
-      </header>
-
-      <section class="balance">
-        <div class="balance__orb"></div>
-        <div class="balance__meta">
-          <p class="caption muted">Wallet balance</p>
-          <div class="balance__amount"><span class="cur">P</span><span id="balanceNum">0.00</span></div>
-        </div>
-        <div class="balance__actions">
-          <button class="chip" data-action="send">Send</button>
-          <button class="chip" data-action="request">Request</button>
-          <button class="chip" data-action="tuition">Tuition</button>
-          <button class="chip" data-action="rent">Rent</button>
-        </div>
-      </section>
-
-      <section class="grid">
-        <article class="tile wide"><h3 class="tile__title">New in PulaPay</h3><p class="tile__desc">UB payments, instant transfers.</p></article>
-        <article class="tile action" data-action="send"><h4>Send money</h4><p class="caption">Phone / email / student ID</p></article>
-        <article class="tile action" data-action="tuition"><h4>Pay tuition</h4><p class="caption">University of Botswana</p></article>
-        <article class="tile action" data-action="rent"><h4>Pay rent</h4><p class="caption">Verified landlords</p></article>
-      </section>
-
-      <section class="list">
-        <h3 class="section__title">Recent activity</h3>
-        <ul id="activityList" class="activity"></ul>
-      </section>
+    <section class="stats-strip section-shell" aria-label="Nimbus advantages">
+      <article><strong>Flat subscription</strong><span>Student access is subsidized; landlords pay simple listing and visibility fees.</span></article>
+      <article><strong>Policy protection</strong><span>Trust scores flag patterns like unfair deposits, overcharging, or unsafe conduct.</span></article>
+      <article><strong>AI-ready matching</strong><span>Built to recommend rentals by budget, campus, commute, safety, and lifestyle.</span></article>
+      <article><strong>Receipt trail</strong><span>Rent, deposit, and agreement records are designed to stay attached to each stay.</span></article>
     </section>
 
-    <!-- Modal -->
-    <dialog id="flowDialog" class="dialog">
-      <form method="dialog" class="flow">
-        <header class="flow__header">
-          <h3 id="flowTitle">Quick action</h3>
-          <button class="btn icon" value="cancel" aria-label="Close">✕</button>
-        </header>
-        <div class="flow__body" id="flowBody"></div>
-        <footer class="flow__footer">
-          <button class="btn neutral" value="cancel">Cancel</button>
-          <button class="btn primary" id="flowSubmit" value="default">Continue</button>
-        </footer>
-      </form>
-    </dialog>
+    <section class="section-shell split" id="about">
+      <div>
+        <p class="eyebrow">Mission</p>
+        <h2>Make student renting in Gaborone fair, documented, and searchable.</h2>
+      </div>
+      <div class="copy-card emphasis-card">
+        <p>Students often rely on scattered WhatsApp posts, rushed viewings, and verbal promises. Nimbus turns that messy process into a guided platform with verified listings, transparent deposits, in-app messages, digital receipts, landlord profiles, and student reviews.</p>
+        <p>The goal is simple: help students focus on school instead of chasing refunds, wondering if a listing is real, or negotiating every rental issue alone.</p>
+      </div>
+    </section>
 
-    <div id="toast" class="toast" role="status" hidden></div>
+    <section class="section-shell how-it-works" aria-labelledby="howTitle">
+      <div class="section-heading centered">
+        <p class="eyebrow">How it works</p>
+        <h2 id="howTitle">From search to stay, Nimbus keeps the record.</h2>
+      </div>
+      <div class="steps-grid">
+        <article><span>01</span><h3>Search by student reality</h3><p>Filter by campus, monthly budget, room type, transport route, house rules, and deposit terms.</p></article>
+        <article><span>02</span><h3>Message before you move</h3><p>Keep viewing times, landlord promises, and move-in details inside a thread you can refer back to.</p></article>
+        <article><span>03</span><h3>Keep receipts</h3><p>Store rent confirmations, deposit agreements, and stay history for disputes or budgeting.</p></article>
+        <article><span>04</span><h3>Rate responsibly</h3><p>Reviews and trust scores reward good landlords and help Nimbus act on repeated abuse.</p></article>
+      </div>
+    </section>
+
+    <section class="section-shell" id="properties">
+      <div class="section-heading">
+        <p class="eyebrow">Student-first listings</p>
+        <h2>Search the type of place you actually need.</h2>
+        <p>Rooms, shared houses, bachelor pads, apartments, and close-to-campus rentals — organized for student realities like budget, transport, safety, and study-friendly living.</p>
+      </div>
+      <div class="property-grid">
+        <article class="property-card featured">
+          <span class="tag">Most popular</span>
+          <h3>Single rooms</h3>
+          <p>Affordable rooms near Tlokweng, Block 7, Extension 12, and campus transport routes.</p>
+          <strong>From P1,200/mo</strong>
+        </article>
+        <article class="property-card">
+          <span class="tag">Shared</span>
+          <h3>Student houses</h3>
+          <p>Share costs with friends while keeping receipts and landlord conversations in one place.</p>
+          <strong>Split rent fairly</strong>
+        </article>
+        <article class="property-card">
+          <span class="tag">Private</span>
+          <h3>Apartments</h3>
+          <p>Compare amenities, deposits, distance to campus, and landlord trust scores before viewing.</p>
+          <strong>Verified details</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-shell area-board" aria-labelledby="areaTitle">
+      <div>
+        <p class="eyebrow">Campus areas</p>
+        <h2 id="areaTitle">Launch zones around Gaborone.</h2>
+        <p>These are example priority areas for early supply. Nimbus can expand as students and landlords join the waitlist.</p>
+      </div>
+      <div class="area-map" aria-label="Example Gaborone rental areas">
+        <span class="map-pin pin-ub">UB Main</span>
+        <span class="map-pin pin-tlokweng">Tlokweng</span>
+        <span class="map-pin pin-block7">Block 7</span>
+        <span class="map-pin pin-ext12">Extension 12</span>
+        <span class="map-pin pin-mogoditshane">Mogoditshane</span>
+      </div>
+    </section>
+
+    <section class="section-shell feature-band" id="safety">
+      <div class="feature-card">
+        <span class="feature-icon">💬</span>
+        <h3>In-app messaging</h3>
+        <p>Students and landlords talk inside Nimbus so important agreements are easy to find later.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🧾</span>
+        <h3>Receipts & records</h3>
+        <p>Keep payment confirmations and rental notes organized for deposit disputes and budgeting.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">⭐</span>
+        <h3>Ratings that matter</h3>
+        <p>Landlords earn trust when they respect student policies; repeated abuse can lead to removal.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🏅</span>
+        <h3>Student points</h3>
+        <p>Reward students for completed stays, good platform behaviour, and helpful reviews.</p>
+      </div>
+    </section>
+
+    <section class="section-shell safety-panel">
+      <div class="safety-copy">
+        <p class="eyebrow">Safety layer</p>
+        <h2>Trust is designed into the rental flow.</h2>
+        <p>Nimbus cannot replace official legal or emergency support, but it can reduce confusion by making policies, messages, payments, and reviews easier to track.</p>
+      </div>
+      <div class="safety-stack">
+        <article><strong>Before move-in</strong><span>Listing verification, deposit expectations, house rules, and viewing notes.</span></article>
+        <article><strong>During the stay</strong><span>Receipts, message history, maintenance notes, and transparent landlord communication.</span></article>
+        <article><strong>After move-out</strong><span>Student reviews, landlord ratings, stay points, and dispute evidence trails.</span></article>
+      </div>
+    </section>
+
+    <section class="section-shell policy-panel" aria-labelledby="policyTitle">
+      <div>
+        <p class="eyebrow">Student policy guardrails</p>
+        <h2 id="policyTitle">Clear rules before a student pays.</h2>
+        <p>Rather than leaving important details in screenshots and voice notes, Nimbus is structured around policy checkpoints that landlords and students can both see.</p>
+      </div>
+      <div class="policy-grid">
+        <article><strong>Deposit terms</strong><span>Amount, refund timing, deductions, and handover condition notes.</span></article>
+        <article><strong>Rent transparency</strong><span>Monthly rent, included utilities, late-fee expectations, and viewing requirements.</span></article>
+        <article><strong>Conduct record</strong><span>Maintenance responsiveness, communication quality, and repeated complaint signals.</span></article>
+      </div>
+    </section>
+
+    <section class="section-shell product-preview" id="preview" aria-labelledby="previewTitle">
+      <div class="section-heading centered">
+        <p class="eyebrow">Product preview</p>
+        <h2 id="previewTitle">A calmer rental workflow for students.</h2>
+        <p>These preview cards show the kind of experience Nimbus is moving toward: search, confirm, message, pay, and keep proof in one place.</p>
+      </div>
+      <div class="preview-grid">
+        <article class="phone-card listing-phone">
+          <div class="phone-top"><span></span><strong>Nearby rooms</strong></div>
+          <div class="listing-mini"><span class="listing-image"></span><div><strong>Block 7 room</strong><p>8 min to UB route • P1,450/mo</p></div></div>
+          <div class="listing-mini"><span class="listing-image sage"></span><div><strong>Tlokweng shared</strong><p>Verified deposit • 4.7 trust</p></div></div>
+        </article>
+        <article class="phone-card message-phone">
+          <div class="phone-top"><span></span><strong>Landlord chat</strong></div>
+          <p class="bubble left">Can I view after class at 16:30?</p>
+          <p class="bubble right">Yes. Deposit is refundable within 7 days after checkout.</p>
+          <p class="bubble left">Please confirm utilities included.</p>
+        </article>
+        <article class="phone-card receipt-phone">
+          <div class="phone-top"><span></span><strong>Receipt vault</strong></div>
+          <div class="receipt-line"><span>Rent paid</span><strong>P1,850</strong></div>
+          <div class="receipt-line"><span>Deposit</span><strong>P1,000</strong></div>
+          <div class="receipt-stamp">Saved for this stay</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-shell landlord-panel" id="landlords">
+      <div>
+        <p class="eyebrow">For landlords</p>
+        <h2>Reach serious students without losing trust.</h2>
+        <p>Post listings for a simple fee, receive qualified student enquiries, manage conversations, and boost visibility with optional ads. Clear rules and ratings help responsible landlords stand out.</p>
+      </div>
+      <ul class="check-list">
+        <li>Paid listing packages for rooms, houses, and apartments</li>
+        <li>Optional promoted ads for priority discovery</li>
+        <li>Trust score that rewards fair deposits and clear communication</li>
+        <li>Future AI matching for faster student-landlord fit</li>
+      </ul>
+    </section>
+
+    <section class="section-shell pricing-panel">
+      <div class="section-heading compact">
+        <p class="eyebrow">Simple model</p>
+        <h2>Flat subscription. Student subsidized.</h2>
+      </div>
+      <div class="pricing-grid">
+        <article class="price-card student-price">
+          <h3>Students</h3>
+          <p class="price">Subsidized</p>
+          <p>Low-cost access to search tools, messaging, receipts, ratings, and points.</p>
+        </article>
+        <article class="price-card">
+          <h3>Landlords</h3>
+          <p class="price">Listing + ads</p>
+          <p>Post verified rentals and pay for optional promotion when you want more visibility.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-shell faq-section" aria-labelledby="faqTitle">
+      <div class="section-heading centered">
+        <p class="eyebrow">Questions students ask</p>
+        <h2 id="faqTitle">Clear answers before you sign anything.</h2>
+      </div>
+      <div class="faq-list">
+        <details open>
+          <summary>Will Nimbus hold landlords accountable?</summary>
+          <p>Nimbus is designed to track messages, receipts, reviews, and policy violations. Repeated unfair behaviour can reduce visibility or lead to removal from the platform.</p>
+        </details>
+        <details>
+          <summary>Can students earn points?</summary>
+          <p>Yes. The planned points system rewards completed stays, helpful reviews, and positive platform behaviour.</p>
+        </details>
+        <details>
+          <summary>Will AI features be included?</summary>
+          <p>The landing page prepares the product for future AI matching by budget, campus, commute, safety needs, and preferred living style.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="section-shell contact-panel" id="contact">
+      <div>
+        <p class="eyebrow">Early access</p>
+        <h2>Help shape student housing in Gaborone.</h2>
+        <p>Join the waitlist as a student, landlord, university partner, parent, or early supporter. Feedback will help prioritize launch areas, safety rules, and AI matching features.</p>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <label>Name<input type="text" name="name" placeholder="Your name" autocomplete="name" required></label>
+        <label>Email<input type="email" name="email" placeholder="you@example.com" autocomplete="email" required></label>
+        <label>Phone / WhatsApp<input type="tel" name="phone" placeholder="+267 ..." autocomplete="tel"></label>
+        <label>I am a<select name="role"><option>Student</option><option>Landlord</option><option>University partner</option><option>Parent / guardian</option></select></label>
+        <label>Message<textarea name="message" rows="4" placeholder="Tell us what you need from Nimbus"></textarea></label>
+        <button class="btn primary" type="submit">Join the waitlist</button>
+      </form>
+    </section>
+
+    <section class="section-shell legal-grid" id="legal" aria-label="Legal information">
+      <article id="privacy">
+        <h3>Privacy Policy</h3>
+        <p>Nimbus will collect only the information needed to help students find accommodation, message landlords, keep receipts, prevent abuse, and improve safety. Personal information should not be sold, and sensitive records should be protected with appropriate access controls.</p>
+      </article>
+      <article id="terms">
+        <h3>Terms of Use</h3>
+        <p>Users must provide honest listing, profile, and payment information. Landlords must respect stated student policies, deposits, and platform rules. Nimbus may review, restrict, or remove accounts connected to scams, harassment, repeated unfair practices, or unsafe listings.</p>
+      </article>
+      <article id="cookies">
+        <h3>Cookies</h3>
+        <p>Cookies and local storage may be used for essential site functions, saved preferences, analytics, and future logged-in experiences. Visitors can accept or manage non-essential cookies when controls are available.</p>
+      </article>
+    </section>
   </main>
 
-  <!-- Firebase SDK via ESM -->
-  <script type="module" src="/app.js"></script>
+  <footer class="site-footer">
+    <a href="#home" class="footer-brand">Nimbus Student Stay</a>
+    <div class="footer-links">
+      <a href="#privacy">Privacy</a>
+      <a href="#terms">Terms</a>
+      <a href="#cookies">Cookies</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <p>© 2026 Nimbus. Built for students around Gaborone, Botswana.</p>
+  </footer>
+
+  <aside class="cookie-banner" id="cookieBanner" aria-label="Cookie notice" hidden>
+    <p>We use essential cookies and simple preference storage to make Nimbus smoother for students.</p>
+    <div class="cookie-actions">
+      <button class="btn mini" type="button" id="acceptCookies">Accept</button>
+      <button class="btn mini secondary-mini" type="button" id="dismissCookies">Essential only</button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="/app.js" defer></script>
   <script>
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }
   </script>
