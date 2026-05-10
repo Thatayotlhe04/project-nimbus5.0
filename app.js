@@ -1,84 +1,212 @@
-// app.js (ESM)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.querySelector('#navLinks');
+const contactForm = document.querySelector('#contactForm');
+const quickSearch = document.querySelector('#quickSearch');
+const toast = document.querySelector('#toast');
+const cookieBanner = document.querySelector('#cookieBanner');
+const acceptCookies = document.querySelector('#acceptCookies');
+const dismissCookies = document.querySelector('#dismissCookies');
+const formStatus = document.querySelector('#formStatus');
+const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
 
-const firebaseConfig = {
-  apiKey: "YOUR_FIREBASE_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "XXXX",
-  appId: "1:XXXX:web:YYYY"
+const supabaseConfig = {
+  url: window.NIMBUSHABOR_SUPABASE_URL || window.NIMBUS_SUPABASE_URL || document.querySelector('meta[name="supabase-url"]')?.content || '',
+  anonKey: window.NIMBUSHABOR_SUPABASE_ANON_KEY || window.NIMBUS_SUPABASE_ANON_KEY || document.querySelector('meta[name="supabase-anon-key"]')?.content || ''
 };
-initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore();
 
-const $ = (s, el=document)=>el.querySelector(s);
-const authCard = $('#authCard'), dashCard = $('#dashCard');
-const loginForm = $('#loginForm'), email=$('#email'), password=$('#password');
-const demoLogin = $('#demoLogin'), forgotBtn=$('#forgotBtn'), signUpBtn=$('#goToSignUp');
-const logoutBtn = $('#logoutBtn'); const activityList = $('#activityList'); const balanceNum = $('#balanceNum');
-const toast = $('#toast'), dialog = $('#flowDialog'), flowTitle=$('#flowTitle'), flowBody=$('#flowBody'), flowSubmit=$('#flowSubmit');
+const storage = {
+  get(key) {
+    try {
+      return window.localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  set(key, value) {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch {
+      // Storage can be disabled in private browsing; the UI should still work.
+    }
+  }
+};
 
-function show(view){ view==='dashboard'? (authCard.classList.add('hidden'), dashCard.classList.remove('hidden')) : (dashCard.classList.add('hidden'), authCard.classList.remove('hidden')); }
-function notify(m){ toast.textContent=m; toast.hidden=false; setTimeout(()=>toast.hidden=true,2000); }
-function setDate(){ const d=new Date(); $('#dow').textContent=d.toLocaleDateString(undefined,{weekday:"short"}); const n=d.getDate(); $('#dom').innerHTML=`${n}<span class="th">${['th','st','nd','rd'][((n%100-20)%10)]||(['th','st','nd','rd'][n%10])||'th'}</span>`;}
-setDate();
+function readStoredSearch() {
+  try {
+    return JSON.parse(storage.get('nimbushaborLatestSearch') || '{}');
+  } catch {
+    return {};
+  }
+}
 
-// ---- Auth ----
-loginForm.addEventListener('submit', async (e)=>{e.preventDefault(); await signInWithEmailAndPassword(auth, email.value, password.value).catch(e=>notify(e.message));});
-demoLogin.addEventListener('click', async ()=>{ await createUserWithEmailAndPassword(auth, "demo@pulapay.dev", "pulapay").catch(()=>{}); await signInWithEmailAndPassword(auth, "demo@pulapay.dev", "pulapay"); });
-forgotBtn.addEventListener('click', ()=> email.value? sendPasswordResetEmail(auth, email.value).then(()=>notify('Reset email sent')).catch(e=>notify(e.message)) : notify('Enter email first'));
-logoutBtn.addEventListener('click', ()=>signOut(auth));
+let latestSearch = readStoredSearch();
 
-onAuthStateChanged(auth, async (user)=>{
-  if(!user){ show('auth'); return; }
-  show('dashboard');
-  // live wallet updates
-  const walletRef = doc(db, 'wallets', user.uid);
-  onSnapshot(walletRef, snap=>{
-    const data=snap.data()||{balance:0};
-    balanceNum.textContent = Number(data.balance||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+function showToast(message) {
+  if (!toast) return;
+  toast.textContent = message;
+  toast.hidden = false;
+  window.clearTimeout(showToast.timer);
+  showToast.timer = window.setTimeout(() => {
+    toast.hidden = true;
+  }, 4200);
+}
+
+function setFormStatus(message, state = 'idle') {
+  if (!formStatus) return;
+  formStatus.textContent = message;
+  formStatus.dataset.state = state;
+}
+
+function setFormBusy(isBusy) {
+  const submitButton = contactForm?.querySelector('button[type="submit"]');
+  if (!submitButton) return;
+  submitButton.disabled = isBusy;
+  submitButton.textContent = isBusy ? 'Saving...' : 'Join the waitlist';
+}
+
+function closeMenu() {
+  navLinks?.classList.remove('is-open');
+  menuToggle?.setAttribute('aria-expanded', 'false');
+}
+
+function normalizeLeadPayload(payload) {
+  return {
+    name: payload.name?.trim(),
+    email: payload.email?.trim().toLowerCase(),
+    phone: payload.phone?.trim() || null,
+    role: payload.role,
+    message: payload.message?.trim() || null,
+    campus_preference: payload.campus_preference || null,
+    budget_preference: payload.budget_preference || null,
+    move_in_preference: payload.move_in_preference || null,
+    accommodation_preference: payload.accommodation_preference || null,
+    source: 'landing_page'
+  };
+}
+
+async function saveWaitlistLead(payload) {
+  const normalizedPayload = normalizeLeadPayload(payload);
+
+  if (!supabaseConfig.url || !supabaseConfig.anonKey) {
+    storage.set('nimbushaborWaitlistLead', JSON.stringify({ ...normalizedPayload, created_at: new Date().toISOString() }));
+    return { mode: 'local' };
+  }
+
+  const response = await fetch(`${supabaseConfig.url.replace(/\/$/, '')}/rest/v1/waitlist_leads`, {
+    method: 'POST',
+    headers: {
+      apikey: supabaseConfig.anonKey,
+      Authorization: `Bearer ${supabaseConfig.anonKey}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    },
+    body: JSON.stringify(normalizedPayload)
   });
-  fetchActivity();
+
+  if (!response.ok) throw new Error('Supabase waitlist save failed');
+  return { mode: 'supabase' };
+}
+
+menuToggle?.addEventListener('click', () => {
+  if (!navLinks) return;
+  const isOpen = navLinks.classList.toggle('is-open');
+  menuToggle.setAttribute('aria-expanded', String(isOpen));
 });
 
-// ---- Activity ----
-async function fetchActivity(){
-  const token = await auth.currentUser.getIdToken();
-  const r = await fetch('/api/activity', { headers:{ Authorization: `Bearer ${token}` }});
-  const list = await r.json();
-  activityList.innerHTML = list.map(a => `<li><div><div class="who">${a.who}</div><div class="caption">${a.when}</div></div><div class="amt">${a.amt<0?'-':''}P${Math.abs(a.amt).toFixed(2)}</div></li>`).join('');
+navLinks?.addEventListener('click', (event) => {
+  if (event.target.matches('a')) closeMenu();
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeMenu();
+});
+
+quickSearch?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const formData = new FormData(quickSearch);
+  latestSearch = {
+    campus_preference: formData.get('campus'),
+    budget_preference: formData.get('budget'),
+    move_in_preference: formData.get('moveIn'),
+    accommodation_preference: formData.get('accommodationType')
+  };
+  storage.set('nimbushaborLatestSearch', JSON.stringify(latestSearch));
+  showToast(`Early AI match saved: ${latestSearch.campus_preference}, ${latestSearch.budget_preference} budget preference, ${latestSearch.accommodation_preference}, ${latestSearch.move_in_preference}. Join the waitlist for launch access.`);
+  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setFormStatus('Your search preferences will be attached when you join the waitlist.', 'info');
+  window.setTimeout(() => contactForm?.querySelector('input[name="name"]')?.focus(), 650);
+});
+
+contactForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const formData = new FormData(contactForm);
+  if (formData.get('consent') !== 'on') {
+    setFormStatus('Please confirm consent before joining the waitlist.', 'error');
+    return;
+  }
+
+  const name = formData.get('name')?.toString() || 'there';
+  const role = formData.get('role')?.toString() || 'supporter';
+  const payload = {
+    name,
+    email: formData.get('email')?.toString() || '',
+    phone: formData.get('phone')?.toString() || '',
+    role,
+    message: formData.get('message')?.toString() || '',
+    ...latestSearch
+  };
+
+  setFormBusy(true);
+  setFormStatus('Saving your interest...', 'loading');
+
+  try {
+    const result = await saveWaitlistLead(payload);
+    contactForm.reset();
+    const savedWhere = result.mode === 'supabase' ? 'Supabase waitlist' : 'local preview waitlist';
+    const successMessage = `Thanks ${name}! Your ${role.toLowerCase()} interest is saved to the ${savedWhere}.`;
+    setFormStatus(successMessage, 'success');
+    showToast(successMessage);
+  } catch (error) {
+    storage.set('nimbushaborWaitlistLead', JSON.stringify({ ...normalizeLeadPayload(payload), created_at: new Date().toISOString() }));
+    setFormStatus('Supabase is not reachable right now, so your Nimbus-Habor interest was saved locally for this preview.', 'warning');
+    showToast('Supabase is not reachable right now, so your Nimbus-Habor interest was saved locally for this preview.');
+  } finally {
+    setFormBusy(false);
+  }
+});
+
+if (cookieBanner && storage.get('nimbushaborCookieOK') !== 'true') {
+  cookieBanner.hidden = false;
 }
 
-// ---- Actions ----
-document.querySelectorAll('.chip, .tile.action').forEach(el=>el.addEventListener('click',()=>openFlow(el.dataset.action)));
-function openFlow(type){
-  flowBody.innerHTML=''; dialog.showModal();
-  const set=(t,html,submit)=>{flowTitle.textContent=t; flowBody.innerHTML=html; flowSubmit.onclick=submit;}
-  if(type==='send') set('Send money', `
-    <label>Recipient<input id="to" placeholder="Phone / email / student ID" required></label>
-    <label>Amount (P)<input id="amt" type="number" step="0.01" min="1" required></label>`, doSend);
-  if(type==='request') set('Request money', `
-    <label>From<input id="from" placeholder="Phone / email / student ID" required></label>
-    <label>Amount (P)<input id="amt" type="number" step="0.01" min="1" required></label>`, ()=>{notify('Request sent (demo)'); dialog.close();});
-  if(type==='tuition') set('Pay tuition', `
-    <label>Institution<select id="uni"><option>University of Botswana</option><option>BIUST</option></select></label>
-    <label>Student ID<input id="sid" placeholder="2025-12345" required></label>
-    <label>Amount (P)<input id="amt" type="number" min="100" value="2500" required></label>`, doTuition);
-  if(type==='rent') set('Pay rent', `
-    <label>Landlord / Agent<input id="landlord" placeholder="Block 10 Apartments" required></label>
-    <label>Unit / Ref<input id="ref" placeholder="A-12" required></label>
-    <label>Amount (P)<input id="amt" type="number" min="100" value="1800" required></label>`, doRent);
+function saveCookiePreference(message) {
+  storage.set('nimbushaborCookieOK', 'true');
+  if (cookieBanner) cookieBanner.hidden = true;
+  showToast(message);
 }
 
-async function authedFetch(path, body){
-  const token = await auth.currentUser.getIdToken();
-  const r = await fetch(path,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(body)});
-  const j = await r.json(); if(!r.ok) throw new Error(j.error||'Request failed'); return j;
+acceptCookies?.addEventListener('click', () => {
+  saveCookiePreference('Cookie preference saved.');
+});
+
+dismissCookies?.addEventListener('click', () => {
+  saveCookiePreference('Essential-only cookie preference saved.');
+});
+
+if ('IntersectionObserver' in window && navAnchors.length) {
+  const sections = navAnchors
+    .map(anchor => document.querySelector(anchor.getAttribute('href')))
+    .filter(Boolean);
+
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (!visible) return;
+    navAnchors.forEach(anchor => {
+      anchor.classList.toggle('is-active', anchor.getAttribute('href') === `#${visible.target.id}`);
+    });
+  }, { rootMargin: '-35% 0px -55%', threshold: [0.08, 0.25, 0.5] });
+
+  sections.forEach(section => observer.observe(section));
 }
-async function doSend(){ try{ const j=await authedFetch('/api/send',{to:$('#to').value,amt:Number($('#amt').value)}); notify('Sent ✔'); dialog.close(); fetchActivity(); }catch(e){ notify(e.message); } }
-async function doTuition(){ try{ const j=await authedFetch('/api/tuition',{uni:$('#uni').value,sid:$('#sid').value,amt:Number($('#amt').value)}); notify('Tuition paid ✔'); dialog.close(); fetchActivity(); }catch(e){ notify(e.message); } }
-async function doRent(){ try{ const j=await authedFetch('/api/rent',{landlord:$('#landlord').value,ref:$('#ref').value,amt:Number($('#amt').value)}); notify('Rent paid ✔'); dialog.close(); fetchActivity(); }catch(e){ notify(e.message); } }
