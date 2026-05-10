@@ -1,4 +1,4 @@
-const CACHE = 'nimbus-student-stay-v3';
+const CACHE = 'nimbus-student-stay-v4';
 const ASSETS = ['/', '/index.html', '/styles.css', '/app.js', '/manifest.json'];
 
 self.addEventListener('install', event => {

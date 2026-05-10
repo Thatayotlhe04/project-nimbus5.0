@@ -8,6 +8,11 @@ const acceptCookies = document.querySelector('#acceptCookies');
 const dismissCookies = document.querySelector('#dismissCookies');
 const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
 
+const supabaseConfig = {
+  url: window.NIMBUS_SUPABASE_URL || document.querySelector('meta[name="supabase-url"]')?.content || '',
+  anonKey: window.NIMBUS_SUPABASE_ANON_KEY || document.querySelector('meta[name="supabase-anon-key"]')?.content || ''
+};
+
 const storage = {
   get(key) {
     try {
@@ -25,6 +30,8 @@ const storage = {
   }
 };
 
+let latestSearch = {};
+
 function showToast(message) {
   if (!toast) return;
   toast.textContent = message;
@@ -38,6 +45,32 @@ function showToast(message) {
 function closeMenu() {
   navLinks?.classList.remove('is-open');
   menuToggle?.setAttribute('aria-expanded', 'false');
+}
+
+async function saveWaitlistLead(payload) {
+  const normalizedPayload = {
+    ...payload,
+    created_at: new Date().toISOString()
+  };
+
+  if (!supabaseConfig.url || !supabaseConfig.anonKey) {
+    storage.set('nimbusWaitlistLead', JSON.stringify(normalizedPayload));
+    return { mode: 'local' };
+  }
+
+  const response = await fetch(`${supabaseConfig.url.replace(/\/$/, '')}/rest/v1/waitlist_leads`, {
+    method: 'POST',
+    headers: {
+      apikey: supabaseConfig.anonKey,
+      Authorization: `Bearer ${supabaseConfig.anonKey}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    },
+    body: JSON.stringify(normalizedPayload)
+  });
+
+  if (!response.ok) throw new Error('Supabase waitlist save failed');
+  return { mode: 'supabase' };
 }
 
 menuToggle?.addEventListener('click', () => {
@@ -57,21 +90,40 @@ document.addEventListener('keydown', (event) => {
 quickSearch?.addEventListener('submit', (event) => {
   event.preventDefault();
   const formData = new FormData(quickSearch);
-  const campus = formData.get('campus');
-  const budget = formData.get('budget');
-  const moveIn = formData.get('moveIn');
-  showToast(`Early AI match saved: ${campus}, ${budget}, ${moveIn}. Join the waitlist for launch access.`);
+  latestSearch = {
+    campus_preference: formData.get('campus'),
+    budget_preference: formData.get('budget'),
+    move_in_preference: formData.get('moveIn')
+  };
+  storage.set('nimbusLatestSearch', JSON.stringify(latestSearch));
+  showToast(`Early AI match saved: ${latestSearch.campus_preference}, ${latestSearch.budget_preference} budget preference, ${latestSearch.move_in_preference}. Join the waitlist for launch access.`);
   document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   window.setTimeout(() => contactForm?.querySelector('input[name="name"]')?.focus(), 650);
 });
 
-contactForm?.addEventListener('submit', (event) => {
+contactForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   const formData = new FormData(contactForm);
   const name = formData.get('name') || 'there';
   const role = formData.get('role') || 'supporter';
-  contactForm.reset();
-  showToast(`Thanks ${name}! Your ${role.toString().toLowerCase()} interest is on the Nimbus waitlist.`);
+  const payload = {
+    name: name.toString(),
+    email: formData.get('email')?.toString() || '',
+    phone: formData.get('phone')?.toString() || '',
+    role: role.toString(),
+    message: formData.get('message')?.toString() || '',
+    ...latestSearch
+  };
+
+  try {
+    const result = await saveWaitlistLead(payload);
+    contactForm.reset();
+    const savedWhere = result.mode === 'supabase' ? 'Supabase waitlist' : 'local preview waitlist';
+    showToast(`Thanks ${name}! Your ${role.toString().toLowerCase()} interest is saved to the ${savedWhere}.`);
+  } catch (error) {
+    storage.set('nimbusWaitlistLead', JSON.stringify(payload));
+    showToast('Supabase is not reachable right now, so your interest was saved locally for this preview.');
+  }
 });
 
 if (cookieBanner && storage.get('nimbusCookieOK') !== 'true') {

@@ -1,1 +1,44 @@
-# project-nimbus5.0
+# Nimbus Student Stay
+
+Nimbus is a landing page and early-access concept for student accommodation around Gaborone, Botswana.
+
+## Database direction
+
+Nimbus is planned around Supabase, not Firebase. The first production table should capture waitlist interest, then the schema can expand into student profiles, landlord profiles, accommodation posts, messages, receipts, reviews, and policy records.
+
+Suggested initial table:
+
+```sql
+create table waitlist_leads (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  phone text,
+  role text not null,
+  message text,
+  campus_preference text,
+  budget_preference text,
+  move_in_preference text,
+  created_at timestamptz not null default now()
+);
+```
+
+## Local checks
+
+```bash
+npm run check
+npm run serve
+```
+
+## Supabase waitlist wiring
+
+The landing page can write directly to Supabase REST when these values are provided by the deployment shell before `app.js` runs:
+
+```html
+<script>
+  window.NIMBUS_SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+  window.NIMBUS_SUPABASE_ANON_KEY = 'YOUR_PUBLIC_ANON_KEY';
+</script>
+```
+
+If the values are not present, the form keeps the preview experience working by saving the most recent lead locally in the browser.

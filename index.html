@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#5f7255" />
   <meta name="apple-mobile-web-app-title" content="Nimbus" />
   <meta property="og:title" content="Nimbus Stay — Student Accommodation in Gaborone" />
-  <meta property="og:description" content="Find verified student rooms, keep rental receipts, and rate landlords around Gaborone." />
+  <meta property="og:description" content="Plan student accommodation searches, receipt records, landlord messaging, and Supabase-backed waitlist flows around Gaborone." />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -33,6 +33,7 @@
       <a class="nav-pill" href="#properties">Properties</a>
       <a class="nav-pill" href="#safety">Safety</a>
       <a class="nav-pill" href="#preview">Preview</a>
+      <a class="nav-pill" href="#supabase">Database</a>
       <a class="nav-pill" href="#landlords">Landlords</a>
       <a class="portal-pill" href="#contact">Early access</a>
     </div>
@@ -50,7 +51,7 @@
         </div>
         <div class="trust-row" aria-label="Platform highlights">
           <span>Deposit clarity</span>
-          <span>Verified listings</span>
+          <span>Listing checks</span>
           <span>Student points</span>
           <span>Landlord accountability</span>
         </div>
@@ -74,8 +75,8 @@
               <span class="student s3"></span>
               <span class="student s4"></span>
             </div>
-            <div class="floating-note note-one">P1,850/mo</div>
-            <div class="floating-note note-two">4.8 ★ Trust</div>
+            <div class="floating-note note-one">Deposit terms</div>
+            <div class="floating-note note-two">Receipt saved</div>
           </div>
         </div>
         <form class="quick-search" id="quickSearch" aria-label="Quick accommodation search">
@@ -89,9 +90,9 @@
           </label>
           <label>Budget
             <select name="budget">
-              <option>Under P1,500</option>
-              <option>P1,500 - P2,500</option>
-              <option>P2,500 - P4,000</option>
+              <option>Lowest available</option>
+              <option>Mid-range</option>
+              <option>Private space</option>
             </select>
           </label>
           <label>Move-in
@@ -119,7 +120,7 @@
         <h2>Make student renting in Gaborone fair, documented, and searchable.</h2>
       </div>
       <div class="copy-card emphasis-card">
-        <p>Students often rely on scattered WhatsApp posts, rushed viewings, and verbal promises. Nimbus turns that messy process into a guided platform with verified listings, transparent deposits, in-app messages, digital receipts, landlord profiles, and student reviews.</p>
+        <p>Students often rely on scattered WhatsApp posts, rushed viewings, and verbal promises. Nimbus turns that messy process into a guided platform with listing checks, transparent deposits, in-app messages, digital receipts, landlord profiles, and student reviews.</p>
         <p>The goal is simple: help students focus on school instead of chasing refunds, wondering if a listing is real, or negotiating every rental issue alone.</p>
       </div>
     </section>
@@ -147,8 +148,8 @@
         <article class="property-card featured">
           <span class="tag">Most popular</span>
           <h3>Single rooms</h3>
-          <p>Affordable rooms near Tlokweng, Block 7, Extension 12, and campus transport routes.</p>
-          <strong>From P1,200/mo</strong>
+          <p>Room options organized by campus access, transport routes, house rules, and deposit expectations.</p>
+          <strong>Budget clarity before viewing</strong>
         </article>
         <article class="property-card">
           <span class="tag">Shared</span>
@@ -159,7 +160,7 @@
         <article class="property-card">
           <span class="tag">Private</span>
           <h3>Apartments</h3>
-          <p>Compare amenities, deposits, distance to campus, and landlord trust scores before viewing.</p>
+          <p>Compare amenities, deposits, distance to campus, and landlord conduct signals before viewing.</p>
           <strong>Verified details</strong>
         </article>
       </div>
@@ -229,6 +230,24 @@
       </div>
     </section>
 
+    <section class="section-shell data-panel" id="supabase" aria-labelledby="dataTitle">
+      <div>
+        <p class="eyebrow">Supabase foundation</p>
+        <h2 id="dataTitle">Built around a real accommodation database.</h2>
+        <p>Nimbus will use Supabase for waitlist leads first, then for student profiles, landlord profiles, accommodation posts, messages, reviews, receipts, and policy records as the product grows.</p>
+      </div>
+      <div class="data-grid" aria-label="Planned Supabase tables">
+        <span>waitlist_leads</span>
+        <span>students</span>
+        <span>landlords</span>
+        <span>accommodation_posts</span>
+        <span>messages</span>
+        <span>receipts</span>
+        <span>reviews</span>
+        <span>policy_records</span>
+      </div>
+    </section>
+
     <section class="section-shell product-preview" id="preview" aria-labelledby="previewTitle">
       <div class="section-heading centered">
         <p class="eyebrow">Product preview</p>
@@ -238,19 +257,19 @@
       <div class="preview-grid">
         <article class="phone-card listing-phone">
           <div class="phone-top"><span></span><strong>Nearby rooms</strong></div>
-          <div class="listing-mini"><span class="listing-image"></span><div><strong>Block 7 room</strong><p>8 min to UB route • P1,450/mo</p></div></div>
-          <div class="listing-mini"><span class="listing-image sage"></span><div><strong>Tlokweng shared</strong><p>Verified deposit • 4.7 trust</p></div></div>
+          <div class="listing-mini"><span class="listing-image"></span><div><strong>Campus-friendly room</strong><p>Transport notes • deposit terms visible</p></div></div>
+          <div class="listing-mini"><span class="listing-image sage"></span><div><strong>Shared student home</strong><p>House rules • landlord conduct history</p></div></div>
         </article>
         <article class="phone-card message-phone">
           <div class="phone-top"><span></span><strong>Landlord chat</strong></div>
-          <p class="bubble left">Can I view after class at 16:30?</p>
-          <p class="bubble right">Yes. Deposit is refundable within 7 days after checkout.</p>
+          <p class="bubble left">Can I view after class?</p>
+          <p class="bubble right">Yes. Deposit refund terms are attached before you confirm.</p>
           <p class="bubble left">Please confirm utilities included.</p>
         </article>
         <article class="phone-card receipt-phone">
           <div class="phone-top"><span></span><strong>Receipt vault</strong></div>
-          <div class="receipt-line"><span>Rent paid</span><strong>P1,850</strong></div>
-          <div class="receipt-line"><span>Deposit</span><strong>P1,000</strong></div>
+          <div class="receipt-line"><span>Rent record</span><strong>Saved</strong></div>
+          <div class="receipt-line"><span>Deposit terms</span><strong>Attached</strong></div>
           <div class="receipt-stamp">Saved for this stay</div>
         </article>
       </div>
@@ -260,10 +279,10 @@
       <div>
         <p class="eyebrow">For landlords</p>
         <h2>Reach serious students without losing trust.</h2>
-        <p>Post listings for a simple fee, receive qualified student enquiries, manage conversations, and boost visibility with optional ads. Clear rules and ratings help responsible landlords stand out.</p>
+        <p>Post accommodation for a simple fee, receive qualified student enquiries, manage conversations, and boost visibility with optional ads. Clear rules and ratings help responsible landlords stand out.</p>
       </div>
       <ul class="check-list">
-        <li>Paid listing packages for rooms, houses, and apartments</li>
+        <li>Paid posting packages for rooms, houses, and apartments</li>
         <li>Optional promoted ads for priority discovery</li>
         <li>Trust score that rewards fair deposits and clear communication</li>
         <li>Future AI matching for faster student-landlord fit</li>
@@ -284,7 +303,26 @@
         <article class="price-card">
           <h3>Landlords</h3>
           <p class="price">Listing + ads</p>
-          <p>Post verified rentals and pay for optional promotion when you want more visibility.</p>
+          <p>Post checked rentals and pay for optional promotion when you want more visibility.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-shell reviews-section" aria-labelledby="reviewsTitle">
+      <div class="section-heading centered">
+        <p class="eyebrow">Student voices</p>
+        <h2 id="reviewsTitle">Why students want Nimbus.</h2>
+      </div>
+      <div class="reviews-grid">
+        <article class="review-card">
+          <p>“I want one place where a landlord’s promises, deposit terms, and payment proof are all written down. It would make moving near school feel less risky.”</p>
+          <strong>K. Moagi</strong>
+          <span>University student in Gaborone</span>
+        </article>
+        <article class="review-card">
+          <p>“Finding a room should not depend on who has the latest WhatsApp screenshot. A platform that shows rules clearly would help students compare places with confidence.”</p>
+          <strong>Amantle R.</strong>
+          <span>Student accommodation seeker</span>
         </article>
       </div>
     </section>
@@ -305,7 +343,7 @@
         </details>
         <details>
           <summary>Will AI features be included?</summary>
-          <p>The landing page prepares the product for future AI matching by budget, campus, commute, safety needs, and preferred living style.</p>
+          <p>Yes. Nimbus is being shaped for AI matching by budget preference, campus, commute, safety needs, and preferred living style.</p>
         </details>
       </div>
     </section>
@@ -314,7 +352,7 @@
       <div>
         <p class="eyebrow">Early access</p>
         <h2>Help shape student housing in Gaborone.</h2>
-        <p>Join the waitlist as a student, landlord, university partner, parent, or early supporter. Feedback will help prioritize launch areas, safety rules, and AI matching features.</p>
+        <p>Join the Supabase-backed waitlist as a student, landlord, university partner, parent, or early supporter. Feedback will help prioritize launch areas, safety rules, and AI matching features.</p>
       </div>
       <form class="contact-form" id="contactForm">
         <label>Name<input type="text" name="name" placeholder="Your name" autocomplete="name" required></label>
