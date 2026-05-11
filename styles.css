@@ -186,7 +186,7 @@ h3 { margin-bottom: .7rem; font-size: 1.45rem; line-height: 1.1; }
 
 .stats-strip, .feature-band, .legal-grid, .pricing-grid, .property-grid, .steps-grid { display: grid; gap: 1rem; }
 .stats-strip { grid-template-columns: repeat(4, 1fr); margin-bottom: 5rem; }
-.stats-strip article, .copy-card, .property-card, .feature-card, .landlord-panel, .price-card, .contact-panel, .legal-grid article, .steps-grid article, .safety-panel, .faq-list details, .area-board {
+.stats-strip article, .copy-card, .property-card, .feature-card, .landlord-panel, .price-card, .contact-panel, .legal-grid article, .steps-grid article, .safety-panel, .faq-list details {
   border: 2px solid rgba(60, 51, 45, .16);
   border-radius: var(--radius);
   background: rgba(255, 250, 242, .88);
@@ -210,12 +210,6 @@ h3 { margin-bottom: .7rem; font-size: 1.45rem; line-height: 1.1; }
 .property-card strong { margin-top: auto; color: var(--sage-dark); font-size: 1.1rem; }
 .property-card.featured { background: linear-gradient(160deg, #f7ead8, #dce9d6); }
 .tag { display: inline-flex; margin-bottom: 1rem; padding: .35rem .7rem; border-radius: 999px; border: 1px solid rgba(60, 51, 45, .2); background: white; font-weight: 900; font-size: .78rem; }
-.area-board { display: grid; grid-template-columns: .8fr 1.2fr; gap: 2rem; align-items: center; margin-bottom: 5rem; padding: clamp(1.5rem, 4vw, 3rem); background: linear-gradient(135deg, rgba(248,234,214,.95), rgba(255,250,242,.9)); }
-.area-map { position: relative; min-height: 320px; border: 2px solid var(--line); border-radius: 32px; overflow: hidden; background: linear-gradient(135deg, rgba(220,233,214,.9), rgba(255,250,242,.72)), radial-gradient(circle at 30% 30%, rgba(213,155,69,.34), transparent 13rem); }
-.area-map::before, .area-map::after { content: ""; position: absolute; inset: 22% -10%; border-top: 3px dashed rgba(60,51,45,.2); transform: rotate(-18deg); }
-.area-map::after { inset: 58% -8%; transform: rotate(22deg); }
-.area-map span { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; z-index: 1; display: inline-flex; padding: .45rem .65rem; border: 2px solid var(--line); border-radius: 999px; background: white; box-shadow: 3px 4px 0 rgba(60,51,45,.14); color: var(--ink); font-weight: 900; font-size: .78rem; white-space: nowrap; }
-.area-map span::before { content: ""; width: .65rem; height: .65rem; margin-right: .35rem; border-radius: 50%; background: var(--clay); }
 .feature-band { grid-template-columns: repeat(4, 1fr); margin-bottom: 5rem; }
 .feature-card { padding: 1.3rem; }
 .feature-icon { display: grid; place-items: center; width: 50px; height: 50px; margin-bottom: 1rem; border-radius: 18px; background: var(--mint); border: 2px solid rgba(60, 51, 45, .18); font-size: 1.55rem; }
@@ -274,7 +268,7 @@ textarea { resize: vertical; }
   .nav-links.is-open { display: flex; }
   .nav-pill, .portal-pill { width: 100%; min-height: 48px; border-radius: 999px; }
   .portal-pill { height: auto; }
-  .hero, .split, .landlord-panel, .contact-panel, .pricing-panel, .safety-panel, .area-board { grid-template-columns: 1fr; }
+  .hero, .split, .landlord-panel, .contact-panel, .pricing-panel, .safety-panel { grid-template-columns: 1fr; }
   .hero { min-height: auto; padding-top: 3rem; }
   .hero-art { min-height: 420px; }
   .building-card { min-height: 420px; }
@@ -304,8 +298,7 @@ textarea { resize: vertical; }
   .student-group { inset-inline: 24px; transform: scale(.68); }
   .floating-note { font-size: .78rem; }
   .stats-strip, .property-grid, .feature-band, .legal-grid, .pricing-grid, .steps-grid { grid-template-columns: 1fr; }
-  .area-map { min-height: 260px; }
-  .landlord-panel, .contact-panel, .pricing-panel, .safety-panel, .area-board { margin-bottom: 3rem; border-radius: 28px; }
+  .landlord-panel, .contact-panel, .pricing-panel, .safety-panel { margin-bottom: 3rem; border-radius: 28px; }
   .cookie-banner { align-items: stretch; flex-direction: column; }
 }
 
@@ -344,12 +337,6 @@ textarea { resize: vertical; }
 .policy-grid span {
   color: var(--muted);
 }
-.map-pin { --x: 50%; --y: 50%; }
-.pin-ub { --x: 24%; --y: 28%; }
-.pin-tlokweng { --x: 68%; --y: 34%; }
-.pin-block7 { --x: 42%; --y: 58%; }
-.pin-ext12 { --x: 72%; --y: 70%; }
-.pin-mogoditshane { --x: 18%; --y: 76%; }
 .preview-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
