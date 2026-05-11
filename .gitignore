@@ -3,3 +3,7 @@ npm-debug.log*
 .DS_Store
 .env
 .env.*
+
+# Demo videos are binary media assets; keep them out of text-only PR diffs.
+public/demo/*.mp4
+public/demo/*.webm

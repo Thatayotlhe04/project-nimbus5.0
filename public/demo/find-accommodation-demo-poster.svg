@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Nimbus-Habor accommodation demo poster</title>
+  <desc id="desc">A polished app preview showing campus selection, accommodation browsing, listing details, and waitlist signup.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffaf2"/>
+      <stop offset="0.55" stop-color="#dce9d6"/>
+      <stop offset="1" stop-color="#f2e2cb"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="26" stdDeviation="24" flood-color="#3e3022" flood-opacity=".2"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <circle cx="1080" cy="130" r="165" fill="#d59b45" opacity=".18"/>
+  <circle cx="170" cy="610" r="210" fill="#5f7255" opacity=".13"/>
+  <g filter="url(#shadow)">
+    <rect x="146" y="88" width="988" height="544" rx="54" fill="#fffaf2" stroke="#3c332d" stroke-width="8"/>
+    <rect x="192" y="137" width="250" height="446" rx="34" fill="#ffffff" stroke="#3c332d" stroke-width="5"/>
+    <rect x="475" y="137" width="250" height="446" rx="34" fill="#ffffff" stroke="#3c332d" stroke-width="5"/>
+    <rect x="758" y="137" width="330" height="446" rx="34" fill="#35452f" stroke="#3c332d" stroke-width="5"/>
+  </g>
+  <text x="224" y="202" fill="#35452f" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800">Select campus</text>
+  <rect x="224" y="238" width="178" height="46" rx="23" fill="#dce9d6"/>
+  <text x="251" y="270" fill="#35452f" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">UB nearby</text>
+  <text x="507" y="202" fill="#35452f" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800">Browse rooms</text>
+  <rect x="507" y="237" width="177" height="118" rx="24" fill="#e7d6bd"/>
+  <rect x="507" y="382" width="177" height="118" rx="24" fill="#dce9d6"/>
+  <text x="796" y="202" fill="#fffaf2" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="800">View details</text>
+  <rect x="796" y="244" width="245" height="26" rx="13" fill="#dce9d6"/>
+  <rect x="796" y="294" width="186" height="26" rx="13" fill="#fffaf2" opacity=".86"/>
+  <rect x="796" y="470" width="220" height="64" rx="32" fill="#d59b45"/>
+  <text x="835" y="511" fill="#211815" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="900">Join waitlist</text>
+  <circle cx="640" cy="360" r="64" fill="#5f7255" stroke="#fffaf2" stroke-width="10"/>
+  <path d="M622 326l58 34-58 34z" fill="#fffaf2"/>
+  <text x="640" y="680" fill="#35452f" text-anchor="middle" font-family="Georgia, serif" font-size="36" font-weight="700">Nimbus-Habor demo</text>
+</svg>
