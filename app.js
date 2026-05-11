@@ -7,7 +7,8 @@ const cookieBanner = document.querySelector('#cookieBanner');
 const acceptCookies = document.querySelector('#acceptCookies');
 const dismissCookies = document.querySelector('#dismissCookies');
 const formStatus = document.querySelector('#formStatus');
-const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')]
+  .filter(anchor => document.getElementById(anchor.getAttribute('href').slice(1)));
 
 const supabaseConfig = {
   url: window.NIMBUSHABOR_SUPABASE_URL || window.NIMBUS_SUPABASE_URL || document.querySelector('meta[name="supabase-url"]')?.content || '',
