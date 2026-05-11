@@ -57,22 +57,6 @@ p { color: var(--muted); }
 }
 .skip-link:focus { translate: 0 0; }
 
-.top-alert {
-  display: flex;
-  min-height: 52px;
-  align-items: center;
-  justify-content: center;
-  gap: .55rem;
-  padding: .65rem 1rem;
-  border-top: 3px solid var(--line);
-  background: rgba(255, 255, 255, .95);
-  color: var(--sage-dark);
-  text-align: center;
-  font-size: clamp(.82rem, 2vw, 1rem);
-  letter-spacing: .01em;
-}
-.alert-icon { font-size: 1.55rem; transform: rotate(-14deg); }
-
 .site-nav {
   position: sticky;
   top: 0;
@@ -289,7 +273,6 @@ textarea { resize: vertical; }
 
 @media (max-width: 640px) {
   body { background: var(--paper); }
-  .top-alert { align-items: flex-start; text-align: left; }
   .brand-mark { width: 4.3rem; }
   .brand-copy { font-size: 1.2rem; }
   .section-shell { width: min(100% - 1.1rem, 1120px); }
