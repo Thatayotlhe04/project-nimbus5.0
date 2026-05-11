@@ -176,13 +176,22 @@ contactForm?.addEventListener('submit', async (event) => {
   }
 });
 
-if (cookieBanner && storage.get('nimbushaborCookieOK') !== 'true') {
-  cookieBanner.hidden = false;
+function setCookieBannerVisibility(isVisible) {
+  if (!cookieBanner) return;
+  cookieBanner.hidden = !isVisible;
+  cookieBanner.classList.toggle('is-visible', isVisible);
+}
+
+if (storage.get('nimbushaborCookieOK') !== 'true') {
+  setCookieBannerVisibility(true);
 }
 
 function saveCookiePreference(message) {
   storage.set('nimbushaborCookieOK', 'true');
-  if (cookieBanner) cookieBanner.hidden = true;
+  if (cookieBanner) {
+    cookieBanner.hidden = true;
+    cookieBanner.classList.remove('is-visible');
+  }
   showToast(message);
 }
 

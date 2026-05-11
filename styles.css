@@ -216,6 +216,10 @@ textarea { resize: vertical; }
 .footer-brand { font-family: Georgia, "Times New Roman", serif; font-size: 1.4rem; }
 .footer-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; color: rgba(255,255,255,.8); }
 .site-footer p { margin-bottom: 0; color: rgba(255,255,255,.7); }
+.cookie-banner[hidden],
+.toast[hidden] {
+  display: none !important;
+}
 .cookie-banner { position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 760px; margin: auto; padding: .95rem; border: 2px solid var(--line); border-radius: 22px; background: white; box-shadow: var(--shadow); }
 .cookie-banner p { margin: 0; }
 .cookie-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
