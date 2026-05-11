@@ -203,6 +203,39 @@ dismissCookies?.addEventListener('click', () => {
   saveCookiePreference('Essential-only cookie preference saved.');
 });
 
+if (demoVideos.length) {
+  if (prefersReducedMotion) {
+    demoVideos.forEach((video) => {
+      video.controls = true;
+      video.pause();
+    });
+  } else if ('IntersectionObserver' in window) {
+    const demoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
+          const playPromise = video.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {
+              video.controls = true;
+            });
+          }
+          return;
+        }
+
+        video.pause();
+      });
+    }, { threshold: [0, 0.4, 0.75] });
+
+    demoVideos.forEach((video) => demoObserver.observe(video));
+  } else {
+    demoVideos.forEach((video) => {
+      video.controls = true;
+    });
+  }
+}
+
 if ('IntersectionObserver' in window && navAnchors.length) {
   const sections = navAnchors
     .map(anchor => document.querySelector(anchor.getAttribute('href')))
