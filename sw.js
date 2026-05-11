@@ -1,5 +1,5 @@
-const CACHE = 'nimbus-habor-v7';
-const ASSETS = ['.', 'index.html', 'styles.css', 'app.js', 'manifest.json'];
+const CACHE = 'nimbus-habor-v8';
+const ASSETS = ['.', 'index.html', 'privacy.html', 'terms.html', 'cookies.html', 'mission.html', 'styles.css', 'app.js', 'manifest.json'];
 const APP_SHELL = new URL('index.html', self.location.href).href;
 
 function assetUrl(path) {

@@ -184,9 +184,9 @@ h3 { margin-bottom: .7rem; font-size: 1.45rem; line-height: 1.1; }
 .quick-search label { display: grid; gap: .3rem; color: var(--sage-dark); font-weight: 900; font-size: .82rem; }
 .mini-search { min-height: 48px; white-space: nowrap; }
 
-.stats-strip, .feature-band, .legal-grid, .pricing-grid, .property-grid, .steps-grid { display: grid; gap: 1rem; }
+.stats-strip, .feature-band, .pricing-grid, .property-grid, .steps-grid { display: grid; gap: 1rem; }
 .stats-strip { grid-template-columns: repeat(4, 1fr); margin-bottom: 5rem; }
-.stats-strip article, .copy-card, .property-card, .feature-card, .landlord-panel, .price-card, .contact-panel, .legal-grid article, .steps-grid article, .safety-panel, .faq-list details, .area-board {
+.stats-strip article, .copy-card, .property-card, .feature-card, .landlord-panel, .price-card, .contact-panel, .steps-grid article, .safety-panel, .faq-list details, .area-board {
   border: 2px solid rgba(60, 51, 45, .16);
   border-radius: var(--radius);
   background: rgba(255, 250, 242, .88);
@@ -194,7 +194,7 @@ h3 { margin-bottom: .7rem; font-size: 1.45rem; line-height: 1.1; }
 }
 .stats-strip article { padding: 1.3rem; }
 .stats-strip strong { display: block; margin-bottom: .35rem; font-size: 1.1rem; }
-.stats-strip span, .section-heading p, .copy-card, .property-card p, .feature-card p, .landlord-panel p, .price-card p, .legal-grid p, .contact-panel p, .steps-grid p, .safety-panel p { color: var(--muted); }
+.stats-strip span, .section-heading p, .copy-card, .property-card p, .feature-card p, .landlord-panel p, .price-card p, .contact-panel p, .steps-grid p, .safety-panel p { color: var(--muted); }
 .split { display: grid; grid-template-columns: .85fr 1.15fr; gap: 2rem; align-items: start; padding: 4rem 0; }
 .copy-card { padding: clamp(1.4rem, 3vw, 2.4rem); font-size: 1.05rem; }
 .emphasis-card { background: linear-gradient(160deg, rgba(255,250,242,.94), rgba(220,233,214,.82)); }
@@ -247,8 +247,6 @@ h3 { margin-bottom: .7rem; font-size: 1.45rem; line-height: 1.1; }
 input, select, textarea { width: 100%; border: 2px solid rgba(60, 51, 45, .18); border-radius: 18px; background: white; color: var(--ink); font: inherit; padding: .9rem 1rem; }
 input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid rgba(213, 155, 69, .75); outline-offset: 3px; }
 textarea { resize: vertical; }
-.legal-grid { grid-template-columns: repeat(3, 1fr); padding-bottom: 5rem; }
-.legal-grid article { padding: 1.35rem; }
 .site-footer { display: grid; gap: 1rem; justify-items: center; padding: 2rem 1rem 3rem; background: var(--sage-dark); color: white; text-align: center; }
 .footer-brand { font-family: Georgia, "Times New Roman", serif; font-size: 1.4rem; }
 .footer-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; color: rgba(255,255,255,.8); }
@@ -280,7 +278,7 @@ textarea { resize: vertical; }
   .building-card { min-height: 420px; }
   .building { width: 260px; height: 270px; bottom: 72px; }
   .student-group { inset-inline: 42px; transform: scale(.85); transform-origin: bottom center; }
-  .stats-strip, .property-grid, .legal-grid { grid-template-columns: 1fr 1fr; }
+  .stats-strip, .property-grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 700px) {
@@ -303,7 +301,7 @@ textarea { resize: vertical; }
   .plant { transform: scale(.7); }
   .student-group { inset-inline: 24px; transform: scale(.68); }
   .floating-note { font-size: .78rem; }
-  .stats-strip, .property-grid, .feature-band, .legal-grid, .pricing-grid, .steps-grid { grid-template-columns: 1fr; }
+  .stats-strip, .property-grid, .feature-band, .pricing-grid, .steps-grid { grid-template-columns: 1fr; }
   .area-map { min-height: 260px; }
   .landlord-panel, .contact-panel, .pricing-panel, .safety-panel, .area-board { margin-bottom: 3rem; border-radius: 28px; }
   .cookie-banner { align-items: stretch; flex-direction: column; }
