@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Booking confirmed · Nimbus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/app.css" />
+<style>
+  .wrap { max-width: 640px; margin: 0 auto; padding: 30px 0 60px; }
+  .confirm-top { text-align: center; margin-bottom: 26px; }
+  .confirm-key { width: 72px; height: 72px; border-radius: 50%; background: var(--sage-deep); color: #fff; display: grid; place-items: center; margin: 0 auto 16px; }
+  .confirm-top h1 { font-size: 34px; }
+  .ref { font-family: 'Fraunces', serif; font-size: 15px; background: var(--cream-2); padding: 5px 12px; border-radius: 999px; display: inline-block; margin-top: 8px; }
+
+  .panel { background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px; box-shadow: var(--shadow-soft); margin-bottom: 18px; }
+  .panel h3 { font-size: 19px; margin-bottom: 12px; }
+  .kv { display: flex; justify-content: space-between; padding: 7px 0; font-size: 14.5px; border-bottom: 1px dashed var(--line); }
+  .kv:last-child { border-bottom: 0; }
+
+  /* escrow tracker */
+  .track { display: flex; align-items: center; margin: 6px 0 4px; }
+  .stage { flex: 1; text-align: center; position: relative; font-size: 12.5px; color: var(--brown-soft); }
+  .stage .dot { width: 26px; height: 26px; border-radius: 50%; background: var(--cream-3); margin: 0 auto 8px; display: grid; place-items: center; color: #fff; font-size: 13px; }
+  .stage.done .dot { background: var(--sage-deep); }
+  .stage.active .dot { background: var(--terracotta); box-shadow: 0 0 0 4px rgba(201,123,94,.2); }
+  .stage::before { content: ''; position: absolute; top: 13px; left: -50%; width: 100%; height: 2px; background: var(--cream-3); z-index: -1; }
+  .stage:first-child::before { display: none; }
+  .stage.done::before { background: var(--sage-deep); }
+
+  .status-pill { display:inline-flex; gap:6px; align-items:center; padding:6px 12px; border-radius:999px; font-size:13px; font-weight:600; }
+  .st-held { background: rgba(201,123,94,.16); color: var(--terracotta-2); }
+  .st-released { background: rgba(110,132,98,.18); color: var(--sage-shadow); }
+  .st-refunded { background: var(--cream-3); color: var(--brown-soft); }
+  .actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .err { color: var(--terracotta-2); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="container nav-inner">
+  <a href="/" class="logo"><span class="logo-mark">N</span> Nimbus</a>
+  <div class="nav-right"><a href="/browse">Browse more</a></div>
+</div></nav>
+
+<div class="container"><div class="wrap" id="wrap">
+  <div class="panel"><div class="skel" style="height:120px"></div></div>
+</div></div>
+
+<div class="toast" id="toast"><span>Done</span></div>
+
+<script>
+const ref = location.pathname.split('/').pop();
+let BOOKING = null, LISTING = null;
+const provNames = { orange_money: 'Orange Money', smega: 'Smega', myzaka: 'MyZaka' };
+
+async function load() {
+  const res = await fetch(`/api/bookings/${ref}`);
+  if (!res.ok) { document.getElementById('wrap').innerHTML = '<div class="panel">Booking not found.</div>'; return; }
+  const data = await res.json(); BOOKING = data.booking; LISTING = data.listing; render();
+}
+
+function statusPill(s) {
+  const map = { held_in_escrow: ['st-held', '🔒 Held in escrow'], released: ['st-released', '✓ Released to landlord'], refunded: ['st-refunded', '↩ Refunded to you'] };
+  const [cls, label] = map[s] || ['st-held', s];
+  return `<span class="status-pill ${cls}">${label}</span>`;
+}
+
+function tracker(s) {
+  const order = ['paid', 'escrow', 'verify', 'done'];
+  let idx = s === 'held_in_escrow' ? 2 : 3; // paid+escrow always done; verify active when held
+  const labels = { paid: 'Paid', escrow: 'In escrow', verify: s === 'refunded' ? 'Refunded' : 'Verify move-in', done: s === 'refunded' ? '—' : 'Released' };
+  return `<div class="track">${order.map((k, i) => {
+    let cls = '';
+    if (s === 'held_in_escrow') cls = i < 2 ? 'done' : i === 2 ? 'active' : '';
+    else cls = 'done';
+    const mark = cls === 'done' ? '✓' : (i + 1);
+    return `<div class="stage ${cls}"><div class="dot">${mark}</div>${labels[k]}</div>`;
+  }).join('')}</div>`;
+}
+
+function render() {
+  const b = BOOKING;
+  const held = b.status === 'held_in_escrow';
+  document.getElementById('wrap').innerHTML = `
+    <div class="confirm-top">
+      <div class="confirm-key"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M11.5 11.5L21 2"/><path d="M16 7l3 3"/></svg></div>
+      <h1>${held ? 'Booking requested' : b.status === 'released' ? 'Move-in verified' : 'Booking refunded'}</h1>
+      <p class="muted">${LISTING ? LISTING.title + ' · ' + LISTING.neighbourhood : ''}</p>
+      <div class="ref">Ref ${b.reference}</div>
+    </div>
+
+    <div class="panel">
+      <h3>Escrow status</h3>
+      ${tracker(b.status)}
+      <div style="text-align:center;margin-top:14px">${statusPill(b.status)}</div>
+      ${held ? `
+        <div class="escrow-callout" style="margin-top:16px;background:rgba(110,132,98,.12);border:1px solid rgba(110,132,98,.3);border-radius:8px;padding:14px;font-size:13.5px;color:var(--sage-shadow)">
+          We’ve held <b>P${Number(b.escrow_held).toLocaleString()}</b> via ${provNames[b.payment_provider] || b.payment_provider}.
+          Go view the room. Only tap “I’ve moved in” once you’re physically inside and it matches the listing.
+        </div>
+        <div class="actions">
+          <button class="btn btn-accent" id="verify">I’ve moved in — release funds</button>
+          <button class="btn btn-ghost" id="refund">Room wasn’t as described</button>
+        </div>
+        <div class="err" id="err" style="margin-top:8px"></div>
+      ` : b.status === 'released'
+        ? `<p class="muted" style="text-align:center;margin-top:14px;font-size:14px">P${Number(b.landlord_payout).toLocaleString()} released to the landlord (Nimbus kept P${Number(b.platform_commission).toLocaleString()} commission). Welcome home! 🎉</p>`
+        : `<p class="muted" style="text-align:center;margin-top:14px;font-size:14px">Your P${Number(b.escrow_held).toLocaleString()} is on its way back to your ${provNames[b.payment_provider] || 'mobile money'} wallet.</p>`}
+    </div>
+
+    <div class="panel">
+      <h3>Booking details</h3>
+      <div class="kv"><span>Move-in date</span><b>${b.move_in_date}</b></div>
+      <div class="kv"><span>Monthly rent</span><b>P${Number(b.rent).toLocaleString()}</b></div>
+      <div class="kv"><span>Deposit (refundable)</span><b>P${Number(b.deposit).toLocaleString()}</b></div>
+      <div class="kv"><span>Service fee</span><b>P${Number(b.service_fee).toLocaleString()}</b></div>
+      <div class="kv"><span>Paid via</span><b>${provNames[b.payment_provider] || b.payment_provider}</b></div>
+      <div class="kv"><span>Total paid</span><b>P${Number(b.total_paid).toLocaleString()}</b></div>
+    </div>
+
+    <p style="text-align:center"><a href="/browse" class="muted" style="border-bottom:1px solid currentColor">← Browse more homes</a></p>`;
+
+  if (held) {
+    document.getElementById('verify').addEventListener('click', () => act('verify', 'Funds released to landlord ✓'));
+    document.getElementById('refund').addEventListener('click', () => act('refund', 'Refund initiated ↩'));
+  }
+}
+
+function showToast(m) { const t = document.getElementById('toast'); t.querySelector('span').textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+
+async function act(kind, msg) {
+  const btnV = document.getElementById('verify'), btnR = document.getElementById('refund');
+  btnV.disabled = true; btnR.disabled = true;
+  try {
+    const res = await fetch(`/api/bookings/${ref}/${kind}`, { method: 'POST' });
+    const data = await res.json();
+    if (!res.ok) { document.getElementById('err').textContent = data.error || 'Could not update.'; btnV.disabled = false; btnR.disabled = false; return; }
+    BOOKING = data.booking; showToast(msg); render();
+  } catch (e) { document.getElementById('err').textContent = 'Network error.'; btnV.disabled = false; btnR.disabled = false; }
+}
+load();
+</script>
+<script src="/chrome.js" defer></script>
+</body>
+</html>

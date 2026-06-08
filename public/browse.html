@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Browse homes · Nimbus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="/app.css" />
+<style>
+  .browse-head { padding: 22px 0 8px; }
+  .browse-head h1 { font-size: clamp(26px, 3.4vw, 40px); margin-bottom: 6px; }
+  .heisenberg-tag { display:inline-flex; align-items:center; gap:7px; font-size:12.5px; color:var(--brown-soft);
+    background: var(--cream-2); padding: 5px 11px; border-radius: 999px; margin-top: 8px; }
+  .heisenberg-tag b { color: var(--brown-rich); font-weight: 700; }
+
+  .filters { position: sticky; top: 59px; z-index: 30; background: rgba(250,246,236,.92); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line); padding: 14px 0; margin-top: 10px; }
+  .filters-inner { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; }
+  .filters .fgroup { display: flex; flex-direction: column; gap: 6px; }
+  .filters .fgroup > span { font-size: 12px; font-weight: 600; color: var(--brown-soft); }
+  .filters select, .filters input[type=number] { min-width: 150px; }
+  .toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; padding-bottom: 11px; }
+  .toggle input { width: auto; }
+
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 22px 0 10px; align-items: start; }
+  .results { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  #map { height: calc(100vh - 230px); min-height: 460px; border-radius: var(--r-md); border: 1px solid var(--line);
+    position: sticky; top: 140px; z-index: 1; }
+  .map-wrap { position: sticky; top: 140px; }
+  .map-note { font-size: 12px; color: var(--brown-soft); margin-top: 8px; text-align: center; }
+
+  .res-count { font-size: 14px; color: var(--brown-soft); padding: 6px 0 0; }
+  .commute-row { display: flex; gap: 14px; font-size: 13px; color: var(--brown-soft); margin-top: 8px; flex-wrap: wrap; align-items: center; }
+  .commute-row svg { vertical-align: -2px; }
+  .card.dim { opacity: .45; }
+  .empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--brown-soft); }
+
+  @media (max-width: 1080px) { .results { grid-template-columns: 1fr; } }
+  @media (max-width: 920px) {
+    .layout { grid-template-columns: 1fr; }
+    .map-wrap { position: static; order: -1; }
+    #map { position: static; height: 300px; min-height: 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="logo"><span class="logo-mark">N</span> Nimbus</a>
+    <div class="nav-right">
+      <a href="/browse">Browse</a>
+      <a href="/#how">How it works</a>
+      <a href="/#waitlist" class="btn btn-ghost">Join waitlist</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container browse-head">
+  <h1>Find your place near <span class="em-italic" id="campusName">campus</span>.</h1>
+  <p class="muted">Pick your campus and we’ll rank homes by how easy the daily combi trip really is.</p>
+  <div class="heisenberg-tag" id="heisenbergTag" hidden>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>
+    Combi routing by <b>Heisenberg&nbsp;AI</b> · Nubia × Nimbus
+  </div>
+</div>
+
+<div class="filters">
+  <div class="container filters-inner">
+    <div class="fgroup">
+      <span>Your campus</span>
+      <select id="campus"><option value="">Anywhere in Gaborone</option></select>
+    </div>
+    <div class="fgroup">
+      <span>Room type</span>
+      <div class="pill-row" id="roomType">
+        <div class="pill-opt active" data-v="">Any</div>
+        <div class="pill-opt" data-v="studio">Studio</div>
+        <div class="pill-opt" data-v="private">Private room</div>
+        <div class="pill-opt" data-v="shared">Shared</div>
+      </div>
+    </div>
+    <div class="fgroup">
+      <span>Max rent (BWP/mo)</span>
+      <input type="number" id="maxRent" placeholder="e.g. 2500" min="0" step="100" />
+    </div>
+    <label class="toggle"><input type="checkbox" id="combiOnly" /> Has direct combi</label>
+    <label class="toggle"><input type="checkbox" id="verifiedOnly" /> Verified only</label>
+  </div>
+</div>
+
+<div class="container">
+  <div class="res-count" id="resCount"></div>
+  <div class="layout">
+    <div>
+      <div class="results" id="results"></div>
+    </div>
+    <div class="map-wrap">
+      <div id="map"></div>
+      <div class="map-note" id="mapNote">Map data © OpenStreetMap contributors</div>
+    </div>
+  </div>
+</div>
+
+<footer class="site"><div class="container site-foot-inner">
+  <span>© 2026 Nimbus · Gaborone</span><a href="/">← Back to home</a>
+</div></footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+const state = { campus: '', roomType: '', maxRent: '', combiOnly: false, verifiedOnly: false };
+let map, listingLayer, campusMarker, markers = {};
+
+// --- init from URL ---
+const params = new URLSearchParams(location.search);
+for (const k of Object.keys(state)) {
+  if (params.has(k)) state[k] = k === 'combiOnly' || k === 'verifiedOnly' ? params.get(k) === 'true' : params.get(k);
+}
+
+function syncUrl() {
+  const p = new URLSearchParams();
+  for (const [k, v] of Object.entries(state)) if (v) p.set(k, v);
+  history.replaceState(null, '', `${location.pathname}${p.toString() ? '?' + p : ''}`);
+}
+
+function initMap() {
+  if (typeof L === 'undefined') { $('#map').innerHTML = '<div style="padding:20px;color:var(--brown-soft)">Map unavailable offline. Listings still work below.</div>'; return; }
+  map = L.map('map', { scrollWheelZoom: false }).setView([-24.658, 25.912], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+  listingLayer = L.layerGroup().addTo(map);
+}
+
+const walkSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="4" r="2"/><path d="M9 20l2-6 3 2 1 4M11 14l-2-5 4-1 3 3"/></svg>';
+const combiSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="11" rx="2"/><path d="M3 11h18M7 17v2M17 17v2"/></svg>';
+
+function roomBadge(t) { return ({ studio: 'Independent studio', private: 'Private room', shared: 'Shared room' })[t] || t; }
+
+function commuteHtml(l) {
+  if (!l.commute) return '';
+  const walk = `<span title="walking">${walkSvg} ${l.commute.walkMin} min walk</span>`;
+  const combi = l.commute.combiMin != null
+    ? `<span title="combi">${combiSvg} ~${l.commute.combiMin} min combi</span>`
+    : `<span class="muted">No direct combi</span>`;
+  const score = l.combi
+    ? `<span class="combi-meter"><span class="combi-dot combi-${l.combi.label.replace(' ','')}"></span>${l.combi.label}${l.combi.routes[0] ? ` · ${l.combi.routes[0].name}` : ''}</span>`
+    : '';
+  return `<div class="commute-row">${walk}${combi}${score}</div>`;
+}
+
+function cardHtml(l) {
+  const q = state.campus ? `?campus=${state.campus}` : '';
+  const badge = l.verified
+    ? '<span class="badge badge-verified">✓ Verified</span>'
+    : '<span class="badge badge-pending">Inspection pending</span>';
+  return `<a class="card" href="/listing/${l.id}${q}" data-id="${l.id}">
+    <div class="card-img photo photo-${l.roomType}"></div>
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+        <div><div class="card-title">${l.title}</div>
+        <div class="muted" style="font-size:13.5px">${l.neighbourhood} · ${roomBadge(l.roomType)}</div></div>
+        <div class="price">P${l.rent.toLocaleString()}<small>/mo</small></div>
+      </div>
+      <div style="margin-top:8px">${badge}</div>
+      ${commuteHtml(l)}
+    </div></a>`;
+}
+
+function renderMarkers(listings) {
+  if (!map) return;
+  listingLayer.clearLayers(); markers = {};
+  if (campusMarker) { map.removeLayer(campusMarker); campusMarker = null; }
+
+  const campus = listings.length && listings[0].commute ? CAMPUS_BY_ID[state.campus] : null;
+  const bounds = [];
+
+  listings.forEach((l) => {
+    const m = L.circleMarker([l.lat, l.lng], {
+      radius: 9, color: '#fff', weight: 2,
+      fillColor: l.verified ? '#6E8462' : '#C97B5E', fillOpacity: .95,
+    }).addTo(listingLayer);
+    m.bindPopup(`<b>${l.title}</b><br>${l.neighbourhood} · P${l.rent.toLocaleString()}/mo`);
+    m.on('click', () => highlight(l.id));
+    markers[l.id] = m; bounds.push([l.lat, l.lng]);
+  });
+
+  if (campus) {
+    campusMarker = L.marker([campus.lat, campus.lng]).addTo(map).bindPopup(`<b>${campus.name}</b>`);
+    bounds.push([campus.lat, campus.lng]);
+  }
+  if (bounds.length) map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+}
+
+function highlight(id) {
+  document.querySelectorAll('.card').forEach((c) => c.classList.toggle('dim', c.dataset.id !== id));
+  setTimeout(() => document.querySelectorAll('.card').forEach((c) => c.classList.remove('dim')), 1600);
+  const card = document.querySelector(`.card[data-id="${id}"]`);
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+let CAMPUS_BY_ID = {};
+async function loadCampuses() {
+  const { campuses } = await fetch('/api/campuses').then((r) => r.json());
+  const sel = $('#campus');
+  campuses.forEach((c) => {
+    CAMPUS_BY_ID[c.id] = c;
+    const o = document.createElement('option');
+    o.value = c.id; o.textContent = c.name; sel.appendChild(o);
+  });
+  sel.value = state.campus;
+}
+
+async function load() {
+  const p = new URLSearchParams();
+  for (const [k, v] of Object.entries(state)) if (v) p.set(k, v);
+  $('#results').innerHTML = Array.from({ length: 4 }).map(() =>
+    '<div class="card"><div class="card-img skel"></div><div class="card-body"><div class="skel" style="height:18px;width:70%"></div><div class="skel" style="height:13px;width:50%;margin-top:8px"></div></div></div>').join('');
+
+  const data = await fetch('/api/listings?' + p).then((r) => r.json());
+
+  // campus heading + tag
+  const c = CAMPUS_BY_ID[state.campus];
+  $('#campusName').textContent = c ? c.short : 'campus';
+  $('#heisenbergTag').hidden = !c;
+
+  $('#resCount').textContent = `${data.count} home${data.count === 1 ? '' : 's'}${c ? ` ranked for ${c.short}` : ''}`;
+  $('#results').innerHTML = data.listings.length
+    ? data.listings.map(cardHtml).join('')
+    : '<div class="empty">No homes match these filters. Try widening your budget or room type.</div>';
+  renderMarkers(data.listings);
+}
+
+// --- wire controls ---
+$('#campus').value = state.campus;
+$('#maxRent').value = state.maxRent;
+$('#combiOnly').checked = state.combiOnly;
+$('#verifiedOnly').checked = state.verifiedOnly;
+document.querySelectorAll('#roomType .pill-opt').forEach((p) => {
+  p.classList.toggle('active', (p.dataset.v || '') === state.roomType);
+  p.addEventListener('click', () => {
+    document.querySelectorAll('#roomType .pill-opt').forEach((x) => x.classList.remove('active'));
+    p.classList.add('active'); state.roomType = p.dataset.v || ''; syncUrl(); load();
+  });
+});
+$('#campus').addEventListener('change', (e) => { state.campus = e.target.value; syncUrl(); load(); });
+let t; $('#maxRent').addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => { state.maxRent = e.target.value; syncUrl(); load(); }, 350); });
+$('#combiOnly').addEventListener('change', (e) => { state.combiOnly = e.target.checked; syncUrl(); load(); });
+$('#verifiedOnly').addEventListener('change', (e) => { state.verifiedOnly = e.target.checked; syncUrl(); load(); });
+
+initMap();
+loadCampuses().then(load);
+</script>
+<script src="/chrome.js" defer></script>
+</body>
+</html>
