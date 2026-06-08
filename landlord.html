@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For Landlords · Nimbus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./app.css" />
+<style>
+  .head{text-align:center;padding:40px 0 6px}
+  .head h1{font-size:clamp(28px,4vw,44px)}
+  .head p{max-width:54ch;margin:12px auto 0;color:var(--brown-soft);font-size:17px}
+  .plans{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:28px 0}
+  .plan{background:var(--cream);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;cursor:pointer;transition:.15s;box-shadow:var(--shadow-soft)}
+  .plan:hover{transform:translateY(-2px)}
+  .plan.sel{border-color:var(--terracotta);box-shadow:0 0 0 2px var(--terracotta) inset}
+  .plan h3{font-size:21px}
+  .plan .price{font-family:'Fraunces',serif;font-size:38px;color:var(--terracotta-2);margin:6px 0}
+  .plan .price small{font-size:15px;color:var(--brown-soft);font-family:'Manrope'}
+  .plan ul{margin:10px 0 0;padding-left:18px;color:var(--brown);font-size:14px}
+  .plan li{margin:5px 0}
+  .form{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--r-md);padding:22px;max-width:520px;margin:0 auto}
+  .form label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
+  .form input,.form select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:15px;background:#fff}
+  .pay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+  .pay button{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600}
+  .pay button.sel{border-color:var(--terracotta);box-shadow:0 0 0 2px var(--terracotta) inset}
+  #msg{margin-top:14px;font-size:14px;padding:12px;border-radius:10px;display:none}
+  #msg.ok{display:block;background:#e7f0e4;color:#2f5128}
+  #msg.err{display:block;background:#f6e2da;color:#8a3b22}
+  @media(max-width:760px){.plans,.pay{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="container nav-inner">
+  <a href="/" class="logo"><span class="logo-mark">N</span> Nimbus</a>
+  <div class="nav-right"><a href="/browse">Browse</a><a href="/pricing">Pricing</a><a href="/about">About</a></div>
+</div></nav>
+
+<div class="container">
+  <div class="head">
+    <h1>List smarter. <span class="em-italic">Fill faster.</span></h1>
+    <p>Free to list and you only pay 6% when Nimbus fills a room. Upgrade to Pro for priority placement and analytics, or talk to us about a university-wide portal.</p>
+  </div>
+
+  <div class="plans">
+    <div class="plan sel" data-tier="landlord_pro">
+      <h3>Landlord Pro</h3>
+      <div class="price">P299<small>/month</small></div>
+      <ul>
+        <li>Priority placement in search</li>
+        <li>Listing analytics dashboard</li>
+        <li>Bulk upload &amp; calendar</li>
+        <li>Verified-landlord badge</li>
+      </ul>
+    </div>
+    <div class="plan" data-tier="university_portal">
+      <h3>University Portal</h3>
+      <div class="price">P4,999<small>/month</small></div>
+      <ul>
+        <li>White-label off-campus housing portal</li>
+        <li>Student housing directory</li>
+        <li>Occupancy &amp; demand reporting</li>
+        <li>Priority support</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="form">
+    <h3 style="margin-bottom:4px">Start your plan</h3>
+    <p class="muted" style="font-size:13.5px">You’ll be charged the first month now via mobile money. Cancel anytime.</p>
+    <label>Account email or business name</label>
+    <input id="userId" placeholder="e.g. khumo@properties.bw" />
+    <label>Mobile-money number</label>
+    <input id="phone" placeholder="e.g. 71234567" inputmode="numeric" />
+    <label>Pay with</label>
+    <div class="pay" id="pay">
+      <button data-p="orange_money" class="sel">Orange Money</button>
+      <button data-p="myzaka">MyZaka</button>
+      <button data-p="smega">Smega</button>
+    </div>
+    <button id="go" class="btn btn-primary" style="width:100%;margin-top:18px">Subscribe — <span id="goPrice">P299/mo</span></button>
+    <div id="msg"></div>
+  </div>
+  <p class="muted" style="text-align:center;margin-top:22px;font-size:13px">Plans renew monthly. By subscribing you agree to our <a href="/legal/terms" style="border-bottom:1px solid currentColor">Terms</a>.</p>
+</div>
+
+<div id="site-footer"></div>
+<script src="./github-pages.js"></script>
+<script src="./chrome.js" defer></script>
+<script>
+  const PRICES = { landlord_pro: 'P299/mo', university_portal: 'P4,999/mo' };
+  let tier = 'landlord_pro', provider = 'orange_money';
+  const goPrice = document.getElementById('goPrice');
+
+  document.querySelectorAll('.plan').forEach((el) => el.addEventListener('click', () => {
+    document.querySelectorAll('.plan').forEach((p) => p.classList.remove('sel'));
+    el.classList.add('sel'); tier = el.dataset.tier; goPrice.textContent = PRICES[tier];
+  }));
+  document.querySelectorAll('#pay button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('#pay button').forEach((x) => x.classList.remove('sel'));
+    b.classList.add('sel'); provider = b.dataset.p;
+  }));
+
+  const msg = document.getElementById('msg');
+  document.getElementById('go').addEventListener('click', async () => {
+    const userId = document.getElementById('userId').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    msg.className = ''; msg.textContent = '';
+    if (userId.length < 2) { msg.className = 'err'; msg.textContent = 'Please enter your email or business name.'; return; }
+    try {
+      const r = await fetch('/api/subscriptions/start', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, tier, paymentProvider: provider, phone }),
+      });
+      const d = await r.json();
+      if (r.ok) {
+        const s = d.subscription;
+        msg.className = 'ok';
+        msg.textContent = `✓ ${s.tier === 'university_portal' ? 'University Portal' : 'Landlord Pro'} active — renews ${new Date(s.renews_at).toLocaleDateString()}. Ref ${s.provider_ref}.`;
+      } else if (d.pending) {
+        msg.className = 'ok'; msg.textContent = d.message;
+      } else {
+        msg.className = 'err'; msg.textContent = d.error || 'Could not start subscription.';
+      }
+    } catch (e) { msg.className = 'err'; msg.textContent = 'Network error — please try again.'; }
+  });
+</script>
+</body>
+</html>

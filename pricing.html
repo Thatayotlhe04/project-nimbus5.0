@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pricing · Nimbus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./app.css" />
+<style>
+  .head { text-align:center; padding: 40px 0 10px; }
+  .head h1 { font-size: clamp(30px,4vw,46px); }
+  .head p { max-width: 56ch; margin: 12px auto 0; color: var(--brown-soft); font-size: 17px; }
+  .cards { display:grid; grid-template-columns: repeat(2,1fr); gap:18px; margin: 28px 0; }
+  .pcard { background: var(--cream); border:1px solid var(--line); border-radius: var(--r-md); padding: 24px; box-shadow: var(--shadow-soft); }
+  .pcard h3 { font-size: 22px; margin-bottom: 4px; }
+  .pcard .rate { font-family:'Fraunces',serif; font-size: 40px; color: var(--terracotta-2); margin: 8px 0; }
+  .pcard ul { margin: 12px 0 0; padding-left: 18px; color: var(--brown); font-size: 14.5px; }
+  .pcard li { margin: 6px 0; }
+
+  .calc { background: var(--brown-rich); color: var(--cream); border-radius: var(--r-lg); padding: 28px; margin: 30px 0; }
+  .calc h2 { color: var(--cream); font-size: 26px; }
+  .calc-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 18px; align-items: center; }
+  .calc label { display:block; font-size: 13px; color: #E8DFCB; margin: 14px 0 6px; }
+  .calc input[type=range] { width: 100%; }
+  .calc .val { font-family:'Fraunces',serif; font-size: 20px; }
+  .calc .out { background: rgba(250,246,236,.08); border-radius: var(--r-md); padding: 20px; }
+  .calc .big { font-family:'Fraunces',serif; font-size: 44px; line-height:1; }
+  .calc .out .row { display:flex; justify-content:space-between; padding:6px 0; font-size:14px; border-bottom:1px solid rgba(250,246,236,.12); }
+  .calc .out .row:last-child{border-bottom:0}
+
+  table.fees { width:100%; border-collapse: collapse; margin-top: 10px; font-size: 14.5px; }
+  table.fees th, table.fees td { text-align:left; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  table.fees th { font-size: 12px; text-transform: uppercase; letter-spacing:.05em; color: var(--brown-soft); }
+  .addons { display:grid; grid-template-columns: repeat(2,1fr); gap:14px; margin-top: 12px; }
+  .addon { background: var(--cream); border:1px solid var(--line); border-radius: var(--r-sm); padding:16px; }
+  .addon b { color: var(--terracotta-2); }
+  .h2 { font-size: 28px; margin: 40px 0 6px; }
+  .note { background: var(--cream-2); border-radius: var(--r-sm); padding: 14px; font-size: 13.5px; color: var(--brown-soft); margin-top: 16px; }
+  @media (max-width: 800px){ .cards,.calc-grid,.addons{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="container nav-inner">
+  <a href="/" class="logo"><span class="logo-mark">N</span> Nimbus</a>
+  <div class="nav-right"><a href="/browse">Browse</a><a href="/pricing">Pricing</a><a href="/about">About</a><a href="/#waitlist" class="btn btn-ghost">Join waitlist</a></div>
+</div></nav>
+
+<div class="container">
+  <div class="head">
+    <h1>Fair for students. <span class="em-italic">Profitable</span> for Nimbus.</h1>
+    <p>Two simple revenue lines on every booking, plus optional add-ons as you grow. No listing fees, no subscriptions to get started.</p>
+  </div>
+
+  <div class="cards">
+    <div class="pcard">
+      <h3>Students</h3>
+      <div class="rate">8%</div>
+      <div class="muted">one-time service fee · min P150, max P300</div>
+      <ul>
+        <li>Charged only when a booking is <b>approved</b> — never for browsing or applying.</li>
+        <li>Buys you escrow protection: your deposit + first month are held safely until you verify move-in.</li>
+        <li>Deposit stays 100% refundable.</li>
+      </ul>
+    </div>
+    <div class="pcard">
+      <h3>Landlords</h3>
+      <div class="rate">6%</div>
+      <div class="muted">commission on the monthly rent collected</div>
+      <ul>
+        <li>Free to list. You only pay when Nimbus fills your room.</li>
+        <li>We handle marketing, verified tenants, and digital rent collection.</li>
+        <li>Taken from the payout when escrow releases — nothing out of pocket.</li>
+      </ul>
+      <a href="/landlord" class="btn btn-primary" style="margin-top:16px;display:inline-block">List with Nimbus →</a>
+    </div>
+  </div>
+
+  <div class="calc">
+    <h2>What that earns you</h2>
+    <p style="color:#E8DFCB;margin-top:6px">Drag to model your monthly revenue from the two core fees.</p>
+    <div class="calc-grid">
+      <div>
+        <label>Average monthly rent: <span class="val" id="rentV">P2,500</span></label>
+        <input type="range" id="rent" min="1000" max="4000" step="100" value="2500" />
+        <label>Successful move-ins / month: <span class="val" id="bkV">100</span></label>
+        <input type="range" id="bk" min="10" max="500" step="10" value="100" />
+      </div>
+      <div class="out">
+        <div style="font-size:13px;color:#E8DFCB">Estimated Nimbus revenue / month</div>
+        <div class="big" id="total">P0</div>
+        <div style="margin-top:14px">
+          <div class="row"><span>Student service fees</span><span id="tFee">P0</span></div>
+          <div class="row"><span>Landlord commission</span><span id="lFee">P0</span></div>
+          <div class="row"><span>Per booking</span><span id="per">P0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="h2">The per-booking math</h2>
+  <p class="muted">Example on a P2,900 room with a P2,900 deposit:</p>
+  <table class="fees">
+    <tr><th>Line</th><th>Who pays</th><th>Amount</th><th>Where it goes</th></tr>
+    <tr><td>First month + deposit</td><td>Student</td><td>P5,800</td><td>Held in Nimbus escrow</td></tr>
+    <tr><td>Service fee (8%, capped)</td><td>Student</td><td>P232</td><td><b>Nimbus revenue</b></td></tr>
+    <tr><td>Commission (6% of rent)</td><td>Landlord</td><td>P174</td><td><b>Nimbus revenue</b></td></tr>
+    <tr><td>Released on move-in</td><td>—</td><td>P5,626</td><td>Paid to landlord</td></tr>
+    <tr><td><b>Nimbus earns</b></td><td>—</td><td><b>P406</b></td><td>per completed booking</td></tr>
+  </table>
+
+  <h2 class="h2">Recurring plans (predictable revenue)</h2>
+  <p class="muted">On top of per-booking fees, monthly subscriptions add steady income:</p>
+  <div class="addons">
+    <div class="addon"><b>Landlord Pro — P299/mo</b><br/>Priority placement, analytics, bulk upload, verified badge. <a href="/landlord" style="border-bottom:1px solid currentColor">Subscribe →</a></div>
+    <div class="addon"><b>University Portal — P4,999/mo</b><br/>White-label off-campus housing portal for UB, Botho, BIUST &amp; more. <a href="/landlord" style="border-bottom:1px solid currentColor">Get started →</a></div>
+  </div>
+
+  <h2 class="h2">Add-on revenue (as you scale)</h2>
+  <div class="addons">
+    <div class="addon"><b>15%</b> affiliate on combi/“man-with-a-van” moving services booked at checkout.</div>
+    <div class="addon"><b>Micro-commission</b> on prepaid BPC electricity top-ups bought in-app.</div>
+    <div class="addon"><b>P250</b> verified-inspection fee — send a brand ambassador to confirm a property.</div>
+    <div class="addon"><b>Annual SaaS</b> — white-label the portal to universities (UB, Botho, BIUST) as their official off-campus housing partner.</div>
+  </div>
+
+  <h2 class="h2">Where the money lands</h2>
+  <p class="muted">Students pay by <b>Orange Money</b>, <b>MyZaka</b>, or <b>Smega</b>. Collections settle to Nimbus’s
+    <span id="settle">Access Bank Botswana</span> account. Escrow means landlords are paid only after move-in is verified.</p>
+
+  <div class="note">These are illustrative figures to model the business — not a guarantee of revenue. Final fees and any taxes (e.g. VAT) should be confirmed with your accountant before launch.</div>
+</div>
+
+<div id="site-footer"></div>
+<script src="./github-pages.js"></script>
+<script src="./chrome.js" defer></script>
+<script>
+  const f = (n) => 'P' + Math.round(n).toLocaleString();
+  const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
+  const rent = document.getElementById('rent'), bk = document.getElementById('bk');
+  function calc() {
+    const r = +rent.value, b = +bk.value;
+    document.getElementById('rentV').textContent = f(r);
+    document.getElementById('bkV').textContent = b;
+    const svc = Math.round(clamp(r*0.08,150,300));
+    const com = Math.round(r*0.06);
+    const per = svc + com;
+    document.getElementById('tFee').textContent = f(svc*b);
+    document.getElementById('lFee').textContent = f(com*b);
+    document.getElementById('per').textContent = f(per);
+    document.getElementById('total').textContent = f(per*b);
+  }
+  rent.addEventListener('input', calc); bk.addEventListener('input', calc); calc();
+  // reflect real settlement config (masked) if available
+  fetch('/api/payments/info').then(r=>r.json()).then(d=>{
+    if(d.settlement) document.getElementById('settle').textContent = `${d.settlement.bank} account ${d.settlement.accountMasked}`;
+  }).catch(()=>{});
+</script>
+</body>
+</html>

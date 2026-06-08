@@ -1,0 +1,480 @@
+{
+  "campuses": [
+    {
+      "id": "ub",
+      "name": "University of Botswana",
+      "short": "UB",
+      "lat": -24.6647,
+      "lng": 25.9389
+    },
+    {
+      "id": "bac",
+      "name": "Botswana Accountancy College",
+      "short": "BAC",
+      "lat": -24.652,
+      "lng": 25.918
+    },
+    {
+      "id": "botho",
+      "name": "Botho University",
+      "short": "Botho",
+      "lat": -24.679,
+      "lng": 25.887
+    },
+    {
+      "id": "baisago",
+      "name": "BA ISAGO University",
+      "short": "BA ISAGO",
+      "lat": -24.656,
+      "lng": 25.905
+    }
+  ],
+  "listings": [
+    {
+      "id": "blk7-studio",
+      "title": "Bright studio, Block 7",
+      "neighbourhood": "Block 7",
+      "roomType": "studio",
+      "rent": 2900,
+      "deposit": 2900,
+      "verified": true,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "Furnished",
+        "Prepaid electricity",
+        "Wi-Fi ready",
+        "Security bars",
+        "Study desk"
+      ],
+      "description": "A self-contained studio a short walk from the UB gate — your own bathroom, kitchenette, and a quiet street.",
+      "lat": -24.653499999999998,
+      "lng": 25.934199999999997
+    },
+    {
+      "id": "blk6-private",
+      "title": "Private room, family home in Block 6",
+      "neighbourhood": "Block 6",
+      "roomType": "private",
+      "rent": 1800,
+      "deposit": 1800,
+      "verified": true,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "Shared kitchen",
+        "Water included",
+        "Wi-Fi",
+        "Parking",
+        "Furnished"
+      ],
+      "description": "Private room with a shared kitchen in a secure family compound. Great combi access in every direction.",
+      "lat": -24.6479,
+      "lng": 25.9311
+    },
+    {
+      "id": "ext-shared",
+      "title": "Shared twin room near UB",
+      "neighbourhood": "Extension 12",
+      "roomType": "shared",
+      "rent": 1300,
+      "deposit": 1300,
+      "verified": true,
+      "beds": 2,
+      "baths": 1,
+      "amenities": [
+        "Shared kitchen",
+        "Water included",
+        "Walk to campus",
+        "Study desk"
+      ],
+      "description": "Split the rent with a roommate, minutes on foot from UB. Best value for first-years.",
+      "lat": -24.6594,
+      "lng": 25.9361
+    },
+    {
+      "id": "blk8-studio",
+      "title": "New-build studio, Block 8",
+      "neighbourhood": "Block 8",
+      "roomType": "studio",
+      "rent": 3200,
+      "deposit": 3200,
+      "verified": false,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "En-suite bathroom",
+        "Prepaid electricity",
+        "Furnished",
+        "Security bars"
+      ],
+      "description": "A brand-new self-contained studio. Inspection pending — request a verified visit before you book.",
+      "lat": -24.659699999999997,
+      "lng": 25.941499999999998
+    },
+    {
+      "id": "tlokweng-private",
+      "title": "Private room in Tlokweng",
+      "neighbourhood": "Tlokweng",
+      "roomType": "private",
+      "rent": 1600,
+      "deposit": 1600,
+      "verified": true,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "Shared kitchen",
+        "Wi-Fi",
+        "Parking",
+        "Water included"
+      ],
+      "description": "Spacious private room on the Tlokweng combi line straight to UB. Quieter, greener, cheaper.",
+      "lat": -24.6662,
+      "lng": 25.975099999999998
+    },
+    {
+      "id": "phakalane-studio",
+      "title": "Upmarket studio, Phakalane",
+      "neighbourhood": "Phakalane",
+      "roomType": "studio",
+      "rent": 3500,
+      "deposit": 3500,
+      "verified": true,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "En-suite bathroom",
+        "Furnished",
+        "Wi-Fi",
+        "Parking",
+        "Backup water"
+      ],
+      "description": "A premium studio in leafy Phakalane for students who want their own space and don’t mind the commute.",
+      "lat": -24.5839,
+      "lng": 25.9657
+    },
+    {
+      "id": "gabwest2-private",
+      "title": "Private room, Gaborone West Phase 2",
+      "neighbourhood": "Gaborone West Phase 2",
+      "roomType": "private",
+      "rent": 1750,
+      "deposit": 1750,
+      "verified": true,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "Shared kitchen",
+        "Wi-Fi",
+        "Water included",
+        "Furnished"
+      ],
+      "description": "Close to BAC, BA ISAGO and Botho via the West–CBD combi. Tidy room in a well-kept yard.",
+      "lat": -24.6628,
+      "lng": 25.896
+    },
+    {
+      "id": "phase4-shared",
+      "title": "Shared room, Phase 4",
+      "neighbourhood": "Phase 4",
+      "roomType": "shared",
+      "rent": 1200,
+      "deposit": 1200,
+      "verified": true,
+      "beds": 2,
+      "baths": 1,
+      "amenities": [
+        "Shared kitchen",
+        "Water included",
+        "Wi-Fi"
+      ],
+      "description": "Budget shared room with easy combi links toward the CBD campuses.",
+      "lat": -24.669900000000002,
+      "lng": 25.8979
+    },
+    {
+      "id": "broadhurst-studio",
+      "title": "Studio flat, Broadhurst",
+      "neighbourhood": "Broadhurst",
+      "roomType": "studio",
+      "rent": 2700,
+      "deposit": 2700,
+      "verified": true,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "Furnished",
+        "Prepaid electricity",
+        "Wi-Fi",
+        "Security bars"
+      ],
+      "description": "Independent studio in busy Broadhurst, walkable to shops and on the Station combi route.",
+      "lat": -24.631500000000003,
+      "lng": 25.9308
+    },
+    {
+      "id": "mogoditshane-private",
+      "title": "Private room, Mogoditshane",
+      "neighbourhood": "Mogoditshane",
+      "roomType": "private",
+      "rent": 1400,
+      "deposit": 1400,
+      "verified": false,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "Shared kitchen",
+        "Water included",
+        "Parking"
+      ],
+      "description": "Affordable private room west of the city. Inspection pending.",
+      "lat": -24.6271,
+      "lng": 25.8661
+    },
+    {
+      "id": "blk9-private",
+      "title": "Private en-suite, Block 9",
+      "neighbourhood": "Block 9",
+      "roomType": "private",
+      "rent": 1900,
+      "deposit": 1900,
+      "verified": true,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "En-suite bathroom",
+        "Shared kitchen",
+        "Wi-Fi",
+        "Furnished"
+      ],
+      "description": "Private room with its own bathroom, on the Block 9/10 combi line to UB.",
+      "lat": -24.669300000000003,
+      "lng": 25.9298
+    },
+    {
+      "id": "blk10-shared",
+      "title": "Shared room, Block 10",
+      "neighbourhood": "Block 10",
+      "roomType": "shared",
+      "rent": 1250,
+      "deposit": 1250,
+      "verified": true,
+      "beds": 2,
+      "baths": 1,
+      "amenities": [
+        "Shared kitchen",
+        "Water included",
+        "Study desk"
+      ],
+      "description": "Cheap and cheerful shared room with a direct combi to UB.",
+      "lat": -24.676099999999998,
+      "lng": 25.9264
+    },
+    {
+      "id": "naledi-shared",
+      "title": "Shared room, Old Naledi",
+      "neighbourhood": "Old Naledi",
+      "roomType": "shared",
+      "rent": 1100,
+      "deposit": 1100,
+      "verified": false,
+      "beds": 2,
+      "baths": 1,
+      "amenities": [
+        "Shared kitchen",
+        "Water included"
+      ],
+      "description": "The cheapest option on Nimbus right now. Inspection pending — book a verified visit first.",
+      "lat": -24.674699999999998,
+      "lng": 25.911099999999998
+    },
+    {
+      "id": "blk7-ensuite",
+      "title": "En-suite studio, Block 7",
+      "neighbourhood": "Block 7",
+      "roomType": "studio",
+      "rent": 3100,
+      "deposit": 3100,
+      "verified": true,
+      "beds": 1,
+      "baths": 1,
+      "amenities": [
+        "En-suite bathroom",
+        "Furnished",
+        "Prepaid electricity",
+        "Wi-Fi",
+        "Parking"
+      ],
+      "description": "Premium en-suite studio walkable to UB, with secure parking and fast Wi-Fi.",
+      "lat": -24.6556,
+      "lng": 25.935699999999997
+    }
+  ],
+  "routes": [
+    {
+      "id": "r1",
+      "name": "Blocks → UB Gate",
+      "color": "#C97B5E",
+      "fare": 4.5,
+      "servesCampusIds": [
+        "ub"
+      ],
+      "pickups": [
+        {
+          "lat": -24.647,
+          "lng": 25.93
+        },
+        {
+          "lat": -24.6545,
+          "lng": 25.935
+        },
+        {
+          "lat": -24.6605,
+          "lng": 25.9425
+        },
+        {
+          "lat": -24.66,
+          "lng": 25.9355
+        },
+        {
+          "lat": -24.663,
+          "lng": 25.937
+        }
+      ]
+    },
+    {
+      "id": "r2",
+      "name": "Tlokweng → Main Mall",
+      "color": "#6E8462",
+      "fare": 5,
+      "servesCampusIds": [
+        "ub"
+      ],
+      "pickups": [
+        {
+          "lat": -24.6655,
+          "lng": 25.976
+        },
+        {
+          "lat": -24.66,
+          "lng": 25.9355
+        },
+        {
+          "lat": -24.663,
+          "lng": 25.937
+        }
+      ]
+    },
+    {
+      "id": "r3",
+      "name": "Gaborone West → CBD",
+      "color": "#A85A3D",
+      "fare": 4.5,
+      "servesCampusIds": [
+        "bac",
+        "baisago",
+        "botho"
+      ],
+      "pickups": [
+        {
+          "lat": -24.662,
+          "lng": 25.895
+        },
+        {
+          "lat": -24.6705,
+          "lng": 25.8985
+        },
+        {
+          "lat": -24.654,
+          "lng": 25.915
+        }
+      ]
+    },
+    {
+      "id": "r4",
+      "name": "Broadhurst → Station",
+      "color": "#4F6147",
+      "fare": 4.5,
+      "servesCampusIds": [
+        "bac",
+        "baisago"
+      ],
+      "pickups": [
+        {
+          "lat": -24.6305,
+          "lng": 25.93
+        },
+        {
+          "lat": -24.647,
+          "lng": 25.93
+        },
+        {
+          "lat": -24.654,
+          "lng": 25.915
+        }
+      ]
+    },
+    {
+      "id": "r5",
+      "name": "Mogoditshane → Station",
+      "color": "#8a6d3b",
+      "fare": 6.5,
+      "servesCampusIds": [
+        "botho",
+        "baisago"
+      ],
+      "pickups": [
+        {
+          "lat": -24.628,
+          "lng": 25.865
+        },
+        {
+          "lat": -24.677,
+          "lng": 25.89
+        }
+      ]
+    },
+    {
+      "id": "r6",
+      "name": "Phakalane → CBD",
+      "color": "#b08968",
+      "fare": 7,
+      "servesCampusIds": [
+        "bac"
+      ],
+      "pickups": [
+        {
+          "lat": -24.585,
+          "lng": 25.965
+        },
+        {
+          "lat": -24.654,
+          "lng": 25.915
+        }
+      ]
+    },
+    {
+      "id": "r7",
+      "name": "Block 9/10 → UB",
+      "color": "#93A786",
+      "fare": 4.5,
+      "servesCampusIds": [
+        "ub"
+      ],
+      "pickups": [
+        {
+          "lat": -24.67,
+          "lng": 25.9305
+        },
+        {
+          "lat": -24.6755,
+          "lng": 25.9255
+        },
+        {
+          "lat": -24.663,
+          "lng": 25.937
+        }
+      ]
+    }
+  ]
+}

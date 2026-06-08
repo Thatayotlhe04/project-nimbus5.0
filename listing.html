@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Listing · Nimbus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="./app.css" />
+<style>
+  .crumbs { padding: 16px 0; font-size: 14px; color: var(--brown-soft); }
+  .hero-photo { height: clamp(220px, 34vw, 380px); border-radius: var(--r-md); margin-bottom: 22px; }
+  .detail { display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px; align-items: start; }
+  .detail h1 { font-size: clamp(28px, 3.6vw, 42px); margin-bottom: 6px; }
+  .amenities { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-top: 18px; }
+  .amenity { display: flex; gap: 9px; align-items: center; font-size: 14.5px; color: var(--brown); }
+  .amenity svg { color: var(--sage-deep); flex-shrink: 0; }
+  .section-h { font-size: 22px; margin: 30px 0 12px; }
+  #map { height: 280px; border-radius: var(--r-md); border: 1px solid var(--line); margin-top: 10px; }
+
+  .book-card { position: sticky; top: 80px; background: var(--cream); border: 1px solid var(--line);
+    border-radius: var(--r-md); padding: 22px; box-shadow: var(--shadow-card); }
+  .book-card .price { font-size: 30px; }
+  .commute-box { background: var(--cream-2); border-radius: var(--r-sm); padding: 14px; margin: 16px 0; font-size: 14px; }
+  .commute-box .line { display: flex; justify-content: space-between; padding: 4px 0; }
+  .route-chip { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; padding:5px 10px; border-radius:999px;
+    background: var(--cream); border:1px solid var(--line); margin:4px 4px 0 0; }
+  .route-dot { width:8px;height:8px;border-radius:50%; }
+  .escrow-note { font-size: 12.5px; color: var(--brown-soft); margin-top: 12px; line-height: 1.5; }
+  .escrow-note b { color: var(--sage-shadow); }
+  @media (max-width: 860px) { .detail { grid-template-columns: 1fr; } .amenities { grid-template-columns: 1fr; } .book-card { position: static; } }
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="container nav-inner">
+  <a href="/" class="logo"><span class="logo-mark">N</span> Nimbus</a>
+  <div class="nav-right"><a href="/browse">← Back to results</a></div>
+</div></nav>
+
+<div class="container">
+  <div class="crumbs"><a href="/browse">Browse</a> › <span id="crumb">Listing</span></div>
+  <div id="content"><div class="hero-photo skel"></div><div class="skel" style="height:40px;width:50%"></div></div>
+</div>
+
+<footer class="site"><div class="container site-foot-inner">
+  <span>© 2026 Nimbus · Gaborone</span><a href="/browse">← Back to results</a>
+</div></footer>
+
+<script src="./github-pages.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const id = window.NIMBUS_PAGE?.routeId() || location.pathname.split('/').pop();
+const params = new URLSearchParams(location.search);
+let campusId = params.get('campus') || '';
+let DATA = null;
+
+const checkSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const roomLabel = (t) => ({ studio: 'Independent studio', private: 'Private room (shared kitchen)', shared: 'Shared room' })[t] || t;
+
+async function fetchData() {
+  const q = campusId ? `?campus=${campusId}` : '';
+  const res = await fetch(`/api/listings/${id}${q}`);
+  if (!res.ok) { document.getElementById('content').innerHTML = '<p class="muted">Listing not found. <a href="/browse">Back to browse</a>.</p>'; return; }
+  DATA = await res.json();
+  render();
+}
+
+function commuteBox(l) {
+  if (!l.commute) return '<p class="muted" style="font-size:13.5px">Pick your campus above to see the commute.</p>';
+  const combi = l.commute.combiMin != null ? `~${l.commute.combiMin} min` : 'No direct combi';
+  const routes = (l.combi && l.combi.routes.length)
+    ? l.combi.routes.map((r) => `<span class="route-chip"><span class="route-dot" style="background:${r.color}"></span>${r.name} · P${r.fare.toFixed(2)} · ${(r.pickupKm*1000).toFixed(0)}m to stop</span>`).join('')
+    : '<span class="muted" style="font-size:13px">No direct combi route to this campus.</span>';
+  return `<div class="commute-box">
+    <div class="line"><span>Distance</span><b>${l.commute.km} km</b></div>
+    <div class="line"><span>Walk</span><b>${l.commute.walkMin} min</b></div>
+    <div class="line"><span>By combi</span><b>${combi}</b></div>
+    <div class="line"><span>Combi convenience</span><b>${l.combi ? l.combi.label + ' (' + l.combi.score + '/100)' : '—'}</b></div>
+  </div>
+  <div>${routes}</div>
+  <p class="muted" style="font-size:11.5px;margin-top:10px">Combi scoring by Heisenberg AI · Nubia × Nimbus. Times are estimates.</p>`;
+}
+
+function render() {
+  const l = DATA.listing;
+  document.getElementById('crumb').textContent = l.title;
+  const badge = l.verified ? '<span class="badge badge-verified">✓ Verified by Nimbus</span>' : '<span class="badge badge-pending">Inspection pending</span>';
+  const campusOpts = ['<option value="">Select your campus…</option>']
+    .concat(DATA.campuses.map((c) => `<option value="${c.id}" ${c.id === campusId ? 'selected' : ''}>${c.name}</option>`)).join('');
+
+  document.getElementById('content').innerHTML = `
+    <div class="hero-photo photo photo-${l.roomType}"></div>
+    <div class="detail">
+      <div>
+        <h1>${l.title}</h1>
+        <div class="muted" style="font-size:16px">${l.neighbourhood} · ${roomLabel(l.roomType)} · ${l.beds} bed · ${l.baths} bath</div>
+        <div style="margin-top:12px">${badge}</div>
+        <p style="margin-top:18px;font-size:16px;max-width:60ch">${l.description}</p>
+
+        <h3 class="section-h">What’s included</h3>
+        <div class="amenities">${l.amenities.map((a) => `<div class="amenity">${checkSvg} ${a}</div>`).join('')}</div>
+
+        <h3 class="section-h">Getting to campus</h3>
+        <label class="field" style="max-width:340px"><span>Estimate the commute from</span>
+          <select id="campusPick">${campusOpts}</select></label>
+        <div id="map"></div>
+      </div>
+
+      <aside class="book-card">
+        <div class="price">P${l.rent.toLocaleString()}<small>/month</small></div>
+        <div class="muted" style="font-size:13.5px">+ P${l.deposit.toLocaleString()} refundable deposit</div>
+        ${commuteBox(l)}
+        <a class="btn btn-accent btn-block" href="/book/${l.id}${campusId ? '?campus=' + campusId : ''}" ${l.verified ? '' : ''}>Request to book →</a>
+        <p class="escrow-note">🔒 Your deposit & first month are held in <b>Nimbus escrow</b> and only released to the landlord after <b>you verify move-in</b> at the door.</p>
+      </aside>
+    </div>`;
+
+  document.getElementById('campusPick').addEventListener('change', (e) => {
+    campusId = e.target.value;
+    const p = new URLSearchParams(location.search); campusId ? p.set('campus', campusId) : p.delete('campus');
+    history.replaceState(null, '', `${location.pathname}${p.toString() ? '?' + p : ''}`);
+    fetchData();
+  });
+  drawMap(l);
+}
+
+function drawMap(l) {
+  if (typeof L === 'undefined') { document.getElementById('map').style.display = 'none'; return; }
+  const map = L.map('map', { scrollWheelZoom: false }).setView([l.lat, l.lng], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+  const bounds = [[l.lat, l.lng]];
+  L.circleMarker([l.lat, l.lng], { radius: 10, color: '#fff', weight: 2, fillColor: '#C97B5E', fillOpacity: 1 }).addTo(map).bindPopup(`<b>${l.title}</b>`);
+  const c = DATA.campuses.find((x) => x.id === campusId);
+  if (c) { L.marker([c.lat, c.lng]).addTo(map).bindPopup(`<b>${c.name}</b>`); bounds.push([c.lat, c.lng]); }
+  if (bounds.length > 1) map.fitBounds(bounds, { padding: [40, 40] });
+}
+
+fetchData();
+</script>
+<script src="./chrome.js" defer></script>
+</body>
+</html>

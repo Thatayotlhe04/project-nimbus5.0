@@ -1,14 +1,1535 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nimbus</title>
-  <meta http-equiv="refresh" content="0; url=./public/" />
-  <link rel="canonical" href="./public/" />
-  <script>location.replace('./public/' + location.search + location.hash);</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nimbus — Student housing in Gaborone, done right.</title>
+<meta name="description" content="Nimbus connects students at UB, BAC, and beyond with verified, affordable accommodation across Gaborone — without the WhatsApp scams or hidden fees." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     NIMBUS — Landing page
+     Aesthetic: warm African earth-tones, editorial restraint,
+     hand-placed touches that nod to the illustration style.
+     ============================================================ */
+
+  :root {
+    /* Palette pulled from the illustrations */
+    --cream:        #FAF6EC;
+    --cream-2:      #F2EBDC;
+    --cream-3:      #E8DFCB;
+    --sage:         #93A786;
+    --sage-deep:    #6E8462;
+    --sage-shadow:  #4F6147;
+    --terracotta:   #C97B5E;
+    --terracotta-2: #A85A3D;
+    --brown:        #2E2520;
+    --brown-soft:   #5F4F43;
+    --brown-rich:   #3F2F22;
+    --line:         #DDD2BC;
+
+    --r-sm: 8px;
+    --r-md: 14px;
+    --r-lg: 22px;
+    --r-xl: 32px;
+
+    --shadow-soft: 0 1px 2px rgba(63,47,34,.04), 0 8px 30px rgba(63,47,34,.06);
+    --shadow-card: 0 2px 6px rgba(63,47,34,.06), 0 18px 40px rgba(63,47,34,.10);
+    --shadow-lift: 0 4px 10px rgba(63,47,34,.08), 0 30px 60px rgba(63,47,34,.14);
+
+    --maxw: 1240px;
+    --pad: clamp(20px, 4vw, 56px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-weight: 400;
+    color: var(--brown);
+    background: var(--cream);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Subtle grain texture overlay — gives the page that printed/paper feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: .35;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 0 0.13  0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    color: var(--brown-rich);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0;
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+  }
+
+  p { margin: 0; }
+
+  a { color: inherit; text-decoration: none; }
+
+  .em-italic {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+    color: var(--terracotta-2);
+  }
+
+  .container {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 var(--pad);
+  }
+
+  /* ============================================================
+     NAV
+     ============================================================ */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    background: rgba(250, 246, 236, 0.78);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease, background .3s ease;
+  }
+  .nav.scrolled { border-bottom-color: var(--line); }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--brown-rich);
+    letter-spacing: -0.01em;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--sage-deep);
+    display: grid; place-items: center;
+    color: var(--cream);
+    font-style: italic;
+    font-size: 18px;
+    font-family: 'Fraunces', serif;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,.08);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    font-size: 14.5px;
+    color: var(--brown-soft);
+  }
+  .nav-links a { transition: color .2s; }
+  .nav-links a:hover { color: var(--brown); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    border-radius: 999px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    cursor: pointer;
+    border: none;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--brown-rich);
+    color: var(--cream);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(63,47,34,.2);
+    background: var(--brown);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--brown-rich);
+    border: 1px solid var(--line);
+  }
+  .btn-ghost:hover { background: var(--cream-2); }
+
+  @media (max-width: 740px) {
+    .nav-links { display: none; }
+  }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    padding: clamp(40px, 7vw, 96px) 0 clamp(60px, 9vw, 120px);
+    position: relative;
+  }
+
+  /* Soft warm aura behind the hero illustration */
+  .hero::before {
+    content: '';
+    position: absolute;
+    right: -10%;
+    top: 10%;
+    width: 60vw;
+    height: 60vw;
+    max-width: 800px;
+    max-height: 800px;
+    background: radial-gradient(circle at center, rgba(201,123,94,.18), transparent 60%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sage-deep);
+    background: rgba(147, 167, 134, 0.12);
+    padding: 7px 14px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+  }
+  .eyebrow-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--sage-deep);
+    box-shadow: 0 0 0 3px rgba(147, 167, 134, 0.25);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 3px rgba(147,167,134,.25); }
+    50%     { box-shadow: 0 0 0 6px rgba(147,167,134,.08); }
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 6.5vw, 78px);
+    letter-spacing: -0.035em;
+    margin-bottom: 24px;
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 1.4vw, 19px);
+    color: var(--brown-soft);
+    max-width: 540px;
+    margin-bottom: 36px;
+  }
+
+  /* Waitlist form */
+  .waitlist {
+    display: flex;
+    gap: 8px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px;
+    box-shadow: var(--shadow-soft);
+    max-width: 480px;
+  }
+  .waitlist input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 12px 18px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--brown);
+    outline: none;
+  }
+  .waitlist input::placeholder { color: #A89A86; }
+
+  .trust-line {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+    color: var(--brown-soft);
+  }
+  .avatars {
+    display: flex;
+  }
+  .avatars span {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--cream);
+    margin-right: -8px;
+    background-size: cover;
+    background-position: center;
+  }
+  .avatars span:nth-child(1) { background: #C97B5E; }
+  .avatars span:nth-child(2) { background: #93A786; }
+  .avatars span:nth-child(3) { background: #6E8462; }
+  .avatars span:nth-child(4) { background: #A85A3D; }
+
+  /* Hero illustration frame */
+  .hero-art {
+    position: relative;
+    border-radius: var(--r-xl);
+    overflow: visible;
+  }
+  .hero-art-inner {
+    position: relative;
+    background: var(--cream-2);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lift);
+    aspect-ratio: 4 / 3;
+  }
+  .hero-art-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Floating stat card on hero illustration */
+  .stat-card {
+    position: absolute;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 14px 18px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .stat-card .num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    color: var(--brown-rich);
+    line-height: 1;
+  }
+  .stat-card .lbl {
+    font-size: 12.5px;
+    color: var(--brown-soft);
+    line-height: 1.3;
+  }
+  .stat-card.top-left { top: -16px; left: -16px; transform: rotate(-3deg); }
+  .stat-card.bot-right { bottom: -16px; right: -16px; transform: rotate(2deg); }
+
+  @media (max-width: 880px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .stat-card.top-left, .stat-card.bot-right { display: none; }
+  }
+
+  /* ============================================================
+     SECTION HEADERS (shared)
+     ============================================================ */
+  .section { padding: clamp(60px, 9vw, 130px) 0; }
+  .section-header { max-width: 720px; margin-bottom: clamp(40px, 5vw, 70px); }
+  .section-eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terracotta-2);
+    margin-bottom: 18px;
+  }
+  .section-title {
+    font-size: clamp(32px, 4.5vw, 54px);
+    margin-bottom: 18px;
+  }
+  .section-sub {
+    font-size: 17px;
+    color: var(--brown-soft);
+    max-width: 580px;
+  }
+
+  /* ============================================================
+     NEIGHBOURHOODS — integrated illustration (no cards)
+     ============================================================ */
+  .neighbourhoods {
+    background: linear-gradient(180deg, var(--cream) 0%, var(--cream-2) 100%);
+    position: relative;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+  .neighbourhood-scene {
+    margin-top: clamp(20px, 4vw, 50px);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+  /* Soft fade so the illustration melts into the page rather than sitting in a box */
+  .neighbourhood-scene::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 28%;
+    background: linear-gradient(180deg, transparent, var(--cream-2));
+    pointer-events: none;
+  }
+  .neighbourhood-scene img {
+    width: 100%;
+    max-width: 1100px;
+    height: auto;
+    display: block;
+    /* blend the illustration's own background into the page */
+    mix-blend-mode: multiply;
+  }
+
+  /* ============================================================
+
+     HOW IT WORKS — Animated demo
+     ============================================================ */
+  .demo {
+    background: var(--brown-rich);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .demo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(201,123,94,.16), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(147,167,134,.12), transparent 50%);
+    pointer-events: none;
+  }
+  .demo .section-eyebrow { color: var(--terracotta); }
+  .demo .section-title { color: var(--cream); }
+  .demo .section-sub { color: rgba(250,246,236,.7); }
+
+  .demo-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 90px);
+    align-items: center;
+  }
+
+  /* Phone mockup */
+  .phone {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    aspect-ratio: 9 / 19.5;
+    background: #1a1410;
+    border-radius: 42px;
+    padding: 12px;
+    box-shadow:
+      0 0 0 2px rgba(255,255,255,.04),
+      0 30px 80px rgba(0,0,0,.4);
+    position: relative;
+  }
+  .phone::before {
+    content: '';
+    position: absolute;
+    top: 18px; left: 50%; transform: translateX(-50%);
+    width: 90px; height: 24px;
+    background: #0d0907;
+    border-radius: 999px;
+    z-index: 5;
+  }
+  .phone-screen {
+    width: 100%; height: 100%;
+    background: var(--cream);
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+  }
+  .phone-status {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 48px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 28px 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brown-rich);
+    z-index: 4;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    padding: 60px 18px 18px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity .6s ease, transform .6s ease;
+    overflow: hidden;
+  }
+  .screen.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .screen.exiting {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  .screen-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--brown-rich);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .screen-sub {
+    font-size: 13px;
+    color: var(--brown-soft);
+    margin-bottom: 18px;
+  }
+
+  /* Screen 1: filters */
+  .filter-block {
+    background: var(--cream-2);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .filter-label { font-size: 11px; color: var(--brown-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;}
+  .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill { font-size: 12px; padding: 5px 11px; border-radius: 999px; background: var(--cream); color: var(--brown-soft); border: 1px solid var(--line); }
+  .pill.active { background: var(--brown-rich); color: var(--cream); border-color: var(--brown-rich); }
+  .slider-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--brown); font-weight: 600; margin-top: 6px; }
+  .slider-bar { height: 4px; background: var(--cream); border-radius: 2px; position: relative; margin: 8px 0 4px; overflow: hidden; }
+  .slider-fill { position: absolute; left: 20%; right: 30%; top: 0; bottom: 0; background: var(--sage-deep); border-radius: 2px; }
+
+  /* Screen 2: listings */
+  .listing {
+    display: flex;
+    gap: 10px;
+    background: var(--cream-2);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+  .listing-img {
+    width: 60px; height: 60px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--sage), var(--sage-deep));
+    position: relative;
+    overflow: hidden;
+  }
+  .listing:nth-child(odd) .listing-img { background: linear-gradient(135deg, var(--terracotta), var(--terracotta-2)); }
+  .listing-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M10 40 L30 22 L50 40 L50 50 L10 50 Z' fill='%23FAF6EC' opacity='.4'/%3E%3Crect x='25' y='34' width='10' height='16' fill='%23FAF6EC' opacity='.6'/%3E%3C/svg%3E");
+  }
+  .listing-info { flex: 1; min-width: 0; }
+  .listing-name { font-size: 13px; font-weight: 600; color: var(--brown-rich); margin-bottom: 2px; }
+  .listing-meta { font-size: 11px; color: var(--brown-soft); display: flex; gap: 8px; }
+  .listing-price { font-family: 'Fraunces', serif; font-size: 15px; color: var(--brown-rich); }
+  .listing-price small { font-size: 10px; color: var(--brown-soft); font-family: inherit; }
+  .verified-badge {
+    background: var(--sage-deep);
+    color: var(--cream);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* Screen 3: chat */
+  .chat-row {
+    display: flex;
+    margin-bottom: 8px;
+    gap: 6px;
+  }
+  .chat-bubble {
+    padding: 9px 13px;
+    border-radius: 16px;
+    font-size: 12.5px;
+    max-width: 78%;
+    line-height: 1.35;
+  }
+  .chat-them .chat-bubble {
+    background: var(--cream-2);
+    color: var(--brown-rich);
+    border-bottom-left-radius: 4px;
+  }
+  .chat-me {
+    justify-content: flex-end;
+  }
+  .chat-me .chat-bubble {
+    background: var(--brown-rich);
+    color: var(--cream);
+    border-bottom-right-radius: 4px;
+  }
+  .chat-avatar {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--terracotta), var(--terracotta-2));
+  }
+
+  /* Screen 4: success */
+  .success-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    padding-top: 0;
+  }
+  .success-key {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: var(--sage-deep);
+    display: grid; place-items: center;
+    margin-bottom: 18px;
+    color: var(--cream);
+    animation: pop .6s cubic-bezier(.2,1.4,.4,1) both;
+  }
+  @keyframes pop {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+  }
+  .success-screen .screen-title { font-size: 22px; margin-bottom: 8px; text-align: center; }
+  .success-screen .screen-sub { text-align: center; max-width: 220px; }
+  .move-in-card {
+    margin-top: 14px;
+    background: var(--cream-2);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--brown);
+  }
+  .move-in-card strong { color: var(--brown-rich); font-family: 'Fraunces', serif; font-size: 14px; }
+
+  /* Steps list (right side of demo) */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .step {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 18px 22px;
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: background .3s ease;
+    border: 1px solid transparent;
+    background: transparent;
+  }
+  .step.active {
+    background: rgba(250, 246, 236, 0.06);
+    border-color: rgba(250, 246, 236, 0.12);
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(250, 246, 236, 0.08);
+    color: rgba(250, 246, 236, 0.5);
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    transition: all .3s ease;
+  }
+  .step.active .step-num {
+    background: var(--terracotta);
+    color: var(--cream);
+  }
+  .step h4 {
+    color: var(--cream);
+    font-size: 19px;
+    margin-bottom: 4px;
+  }
+  .step p {
+    font-size: 14px;
+    color: rgba(250,246,236, 0.65);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 880px) {
+    .demo-grid { grid-template-columns: 1fr; }
+    .phone { order: 2; }
+  }
+
+  /* ============================================================
+     VALUE PROPS — Why Nimbus
+     ============================================================ */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(20px, 3vw, 32px);
+  }
+  .why-card {
+    background: var(--cream-2);
+    border-radius: var(--r-lg);
+    padding: 36px 30px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .3s ease;
+  }
+  .why-card:hover { transform: translateY(-4px); }
+  .why-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    background: var(--cream);
+    display: grid;
+    place-items: center;
+    margin-bottom: 22px;
+    color: var(--terracotta-2);
+  }
+  .why-card:nth-child(2) .why-icon { color: var(--sage-deep); }
+  .why-card:nth-child(3) .why-icon { color: var(--brown-rich); }
+
+  .why-card h3 {
+    font-size: 26px;
+    margin-bottom: 12px;
+  }
+  .why-card p {
+    color: var(--brown-soft);
+    font-size: 15px;
+  }
+
+  @media (max-width: 860px) {
+    .why-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ============================================================
+     SUPPORT
+     ============================================================ */
+  .support-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+  .support-img-wrap {
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    background: var(--cream-2);
+    aspect-ratio: 1 / 1;
+    box-shadow: var(--shadow-card);
+    transform: rotate(-1.5deg);
+  }
+  .support-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .support-points {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .support-point {
+    display: flex;
+    gap: 18px;
+  }
+  .support-check {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--sage);
+    color: var(--cream);
+    display: grid;
+    place-items: center;
+    margin-top: 2px;
+  }
+  .support-point h4 { font-size: 19px; margin-bottom: 4px; }
+  .support-point p { color: var(--brown-soft); font-size: 15px; }
+
+  @media (max-width: 860px) {
+    .support-grid { grid-template-columns: 1fr; }
+    .support-img-wrap { max-width: 420px; margin: 0 auto; }
+  }
+
+  /* ============================================================
+     FAQ
+     ============================================================ */
+  .faq-wrap {
+    background: linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 100%);
+  }
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: flex-start;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+  }
+  .faq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    color: var(--brown-rich);
+    line-height: 1.3;
+    gap: 24px;
+    user-select: none;
+  }
+  .faq-toggle {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    display: grid;
+    place-items: center;
+    transition: transform .3s ease, background .3s ease;
+  }
+  .faq-item.open .faq-toggle {
+    transform: rotate(45deg);
+    background: var(--brown-rich);
+    color: var(--cream);
+  }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s ease, margin .4s ease;
+    color: var(--brown-soft);
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+  .faq-item.open .faq-a {
+    max-height: 300px;
+    margin-top: 12px;
+  }
+  @media (max-width: 860px) {
+    .faq-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ============================================================
+     FINAL CTA
+     ============================================================ */
+  .cta-final {
+    text-align: center;
+    background: var(--brown-rich);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-final::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 25% 50%, rgba(201,123,94,.2), transparent 40%),
+      radial-gradient(circle at 75% 50%, rgba(147,167,134,.16), transparent 45%);
+    pointer-events: none;
+  }
+  .cta-final .container { position: relative; z-index: 1; }
+  .cta-final h2 {
+    color: var(--cream);
+    font-size: clamp(36px, 5.5vw, 70px);
+    max-width: 760px;
+    margin: 0 auto 18px;
+  }
+  .cta-final p {
+    color: rgba(250,246,236,.7);
+    font-size: 17px;
+    max-width: 540px;
+    margin: 0 auto 36px;
+  }
+  .cta-final .waitlist {
+    margin: 0 auto;
+    background: rgba(250,246,236,.06);
+    border-color: rgba(250,246,236,.16);
+  }
+  .cta-final .waitlist input { color: var(--cream); }
+  .cta-final .waitlist input::placeholder { color: rgba(250,246,236,.45); }
+  .cta-final .btn-primary {
+    background: var(--terracotta);
+    color: var(--cream);
+  }
+  .cta-final .btn-primary:hover { background: var(--terracotta-2); }
+  .founder-note {
+    margin-top: 22px;
+    font-size: 13.5px;
+    color: rgba(250,246,236,.55);
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer {
+    padding: 50px 0 30px;
+    border-top: 1px solid var(--line);
+  }
+  .footer-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    font-size: 14px;
+    color: var(--brown-soft);
+  }
+  .footer-copy { font-size: 13px; color: var(--brown-soft); }
+  .footer-copy .em-italic { color: var(--terracotta-2); }
+
+  /* ============================================================
+     Scroll reveal
+     ============================================================ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Toast for waitlist success */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--brown-rich);
+    color: var(--cream);
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-size: 14px;
+    box-shadow: var(--shadow-lift);
+    z-index: 200;
+    transition: transform .4s cubic-bezier(.2,1,.3,1.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast .toast-check {
+    width: 22px; height: 22px;
+    background: var(--sage);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+  }
+</style>
 </head>
 <body>
-  <p><a href="./public/">Open Nimbus</a></p>
+<!--AB_INJECT-->
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">N</span>
+      Nimbus
+    </a>
+    <div class="nav-links">
+      <a href="/browse">Browse homes</a>
+      <a href="#how">How it works</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/landlord">For landlords</a>
+      <a href="/about">About</a>
+    </div>
+    <a href="/browse" class="btn btn-primary">Browse homes</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy reveal">
+      <h1>
+        Finding a home shouldn't be the <span class="em-italic">hardest part</span> of your degree.
+      </h1>
+      <p class="hero-sub">
+        Nimbus connects students at UB, BAC, and beyond with verified, affordable accommodation across Gaborone — without the WhatsApp scams, the wasted bus trips, or the hidden fees.
+      </p>
+      <form class="waitlist" id="heroForm" novalidate>
+        <input type="email" placeholder="your@email.ac.bw" required aria-label="Email address" />
+        <button type="submit" class="btn btn-primary">Join waitlist →</button>
+      </form>
+      <div style="margin-top:14px;">
+        <a href="/browse" style="font-size:14.5px; color:var(--sage-deep); font-weight:600; border-bottom:1px solid currentColor; padding-bottom:1px;">or browse homes near your campus now →</a>
+      </div>
+      <div class="trust-line">
+        <div class="avatars">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <span><strong style="color: var(--brown);">247 students</strong> already on the list</span>
+      </div>
+    </div>
+
+    <div class="hero-art reveal">
+      <div class="hero-art-inner">
+        <img src="./images/hero-students.png" alt="Students gathered in front of the University of Botswana — illustration" />
+      </div>
+      <div class="stat-card top-left">
+        <div>
+          <div class="num">100%</div>
+          <div class="lbl">Verified<br>landlords</div>
+        </div>
+      </div>
+      <div class="stat-card bot-right">
+        <div>
+          <div class="num">P1,200<small style="font-size:14px; color:var(--brown-soft)">/mo</small></div>
+          <div class="lbl">Avg. starting<br>price</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ NEIGHBOURHOODS ============ -->
+<section class="section neighbourhoods" id="locations">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Where we start</div>
+      <h2 class="section-title">Built for <span class="em-italic">your</span> commute.</h2>
+      <p class="section-sub">
+        We're launching in the neighbourhoods Gaborone students actually live in — every listing within walking, biking, or short-combi distance of where you study.
+      </p>
+    </div>
+  </div>
+
+  <div class="neighbourhood-scene reveal">
+    <img src="./images/neighbourhood.png" alt="Local Gaborone houses — illustration" />
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS / DEMO ============ -->
+<section class="section demo" id="how">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">How it works</div>
+      <h2 class="section-title">From <span class="em-italic">search</span> to <span class="em-italic">keys</span>, in four steps.</h2>
+      <p class="section-sub">
+        No middlemen, no surprise viewing fees, no "send airtime first." Just a clean path from "I need a place" to "I'm home."
+      </p>
+    </div>
+
+    <div class="demo-grid">
+      <!-- Phone mockup -->
+      <div class="phone reveal">
+        <div class="phone-screen">
+          <div class="phone-status">
+            <span>9:41</span>
+            <span>●●● ▮</span>
+          </div>
+
+          <!-- Screen 1: Filters -->
+          <div class="screen active" data-screen="1">
+            <h3 class="screen-title">Tell us what you need</h3>
+            <p class="screen-sub">A few quick questions.</p>
+
+            <div class="filter-block">
+              <div class="filter-label">Where you study</div>
+              <div class="filter-pills">
+                <span class="pill active">UB</span>
+                <span class="pill">BAC</span>
+                <span class="pill">Other</span>
+              </div>
+            </div>
+
+            <div class="filter-block">
+              <div class="filter-label">Monthly budget (BWP)</div>
+              <div class="slider-bar"><div class="slider-fill"></div></div>
+              <div class="slider-row"><span>P 1,500</span><span>P 3,500</span></div>
+            </div>
+
+            <div class="filter-block">
+              <div class="filter-label">Room type</div>
+              <div class="filter-pills">
+                <span class="pill">Shared</span>
+                <span class="pill active">Private</span>
+                <span class="pill">En-suite</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screen 2: Listings -->
+          <div class="screen" data-screen="2">
+            <h3 class="screen-title">3 matches near UB</h3>
+            <p class="screen-sub">All verified · all in budget.</p>
+
+            <div class="listing">
+              <div class="listing-img"></div>
+              <div class="listing-info">
+                <div class="listing-name">Block 7 Studio <span class="verified-badge">✓ Verified</span></div>
+                <div class="listing-meta"><span>1.2km</span><span>·</span><span>Private bath</span></div>
+              </div>
+              <div class="listing-price">P2,400<small>/mo</small></div>
+            </div>
+
+            <div class="listing">
+              <div class="listing-img"></div>
+              <div class="listing-info">
+                <div class="listing-name">Mma Pula's Place <span class="verified-badge">✓ Verified</span></div>
+                <div class="listing-meta"><span>0.8km</span><span>·</span><span>Shared kitchen</span></div>
+              </div>
+              <div class="listing-price">P1,800<small>/mo</small></div>
+            </div>
+
+            <div class="listing">
+              <div class="listing-img"></div>
+              <div class="listing-info">
+                <div class="listing-name">Phakalane Annex <span class="verified-badge">✓ Verified</span></div>
+                <div class="listing-meta"><span>1.5km</span><span>·</span><span>En-suite</span></div>
+              </div>
+              <div class="listing-price">P3,100<small>/mo</small></div>
+            </div>
+          </div>
+
+          <!-- Screen 3: Chat -->
+          <div class="screen" data-screen="3">
+            <h3 class="screen-title">Chat with Mma Pula</h3>
+            <p class="screen-sub">Usually replies within 1hr.</p>
+
+            <div class="chat-row chat-them">
+              <div class="chat-avatar"></div>
+              <div class="chat-bubble">Dumela! Yes the room is still available — when would you like to view it?</div>
+            </div>
+            <div class="chat-row chat-me">
+              <div class="chat-bubble">Saturday morning if possible?</div>
+            </div>
+            <div class="chat-row chat-them">
+              <div class="chat-avatar"></div>
+              <div class="chat-bubble">Perfect — let's say 10am. I'll send the location pin.</div>
+            </div>
+            <div class="chat-row chat-me">
+              <div class="chat-bubble">Sharp, thank you 🙏</div>
+            </div>
+          </div>
+
+          <!-- Screen 4: Success -->
+          <div class="screen success-screen" data-screen="4">
+            <div class="success-key">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M11.5 11.5L21 2"/><path d="M16 7l3 3"/></svg>
+            </div>
+            <h3 class="screen-title">You're home.</h3>
+            <p class="screen-sub">Move-in date confirmed.</p>
+            <div class="move-in-card">
+              <strong>Mma Pula's Place</strong><br>
+              Plot 1247, Block 7<br>
+              <span style="color: var(--sage-deep); font-weight:600;">Move-in: Feb 3, 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="steps reveal">
+        <div class="step active" data-step="1">
+          <div class="step-num">1</div>
+          <div>
+            <h4>Tell us what you need</h4>
+            <p>Campus, budget, room type — three taps and we know what to look for.</p>
+          </div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-num">2</div>
+          <div>
+            <h4>Browse verified listings</h4>
+            <p>Every place is visited and every landlord is checked. No ghost listings.</p>
+          </div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-num">3</div>
+          <div>
+            <h4>Chat directly</h4>
+            <p>Message landlords in-app, lock in viewings, ask the awkward questions.</p>
+          </div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-num">4</div>
+          <div>
+            <h4>Move in with confidence</h4>
+            <p>Signed lease, fair deposit, support on speed-dial if anything goes sideways.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY NIMBUS ============ -->
+<section class="section" id="why">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Why Nimbus</div>
+      <h2 class="section-title">Three things <span class="em-italic">every</span> student deserves.</h2>
+    </div>
+
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Cheaper</h3>
+        <p>No agent fees. No "viewing fee" scams. Transparent monthly rent and deposits, posted upfront so you can compare in seconds.</p>
+      </div>
+
+      <div class="why-card reveal">
+        <div class="why-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </div>
+        <h3>Safer</h3>
+        <p>Every property visited. Every landlord ID-verified. Built-in escrow for deposits, so your money never leaves Nimbus until you've got keys in hand.</p>
+      </div>
+
+      <div class="why-card reveal">
+        <div class="why-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h3>Easier</h3>
+        <p>Find your place from your village — no need to bus into Gabs for ten "maybe" viewings. Filter, chat, and book all in one place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUPPORT ============ -->
+<section class="section" style="background: var(--cream-2);">
+  <div class="container">
+    <div class="support-grid">
+      <div class="support-img-wrap reveal">
+        <img src="./images/support.png" alt="Nimbus help center — friendly support agents at their desks" />
+      </div>
+
+      <div class="reveal">
+        <div class="section-eyebrow">Real humans</div>
+        <h2 class="section-title">Help that <span class="em-italic">actually</span> picks up.</h2>
+        <p class="section-sub" style="margin-top: 18px;">
+          We're a local team. When you call or message, you get a Motswana on the other end who knows the difference between Block 6 and Phakalane, and who'll stay on the line until your problem is sorted.
+        </p>
+
+        <div class="support-points">
+          <div class="support-point">
+            <div class="support-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h4>Open 7am – 9pm, every day</h4>
+              <p>Including weekends — because viewings happen on weekends.</p>
+            </div>
+          </div>
+
+          <div class="support-point">
+            <div class="support-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h4>WhatsApp, call, or in-app chat</h4>
+              <p>Reach us however feels easiest. We answer in Setswana, English, or both.</p>
+            </div>
+          </div>
+
+          <div class="support-point">
+            <div class="support-check">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <h4>Dispute support, free</h4>
+              <p>If something goes wrong with a landlord, we step in. Deposit held in escrow until both sides are happy.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section faq-wrap" id="faq">
+  <div class="container">
+    <div class="faq-grid">
+      <div class="reveal">
+        <div class="section-eyebrow">Questions</div>
+        <h2 class="section-title">You asked.<br>We answer.</h2>
+        <p class="section-sub" style="margin-top: 18px;">
+          Not seeing your question? <a href="#waitlist" style="color: var(--terracotta-2); border-bottom: 1px solid currentColor;">Drop us a line</a> when you join the waitlist.
+        </p>
+      </div>
+
+      <div class="faq-list reveal">
+        <div class="faq-item">
+          <div class="faq-q">
+            When does Nimbus launch?
+            <div class="faq-toggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="faq-a">We're rolling out around the start of the 2026 academic intake, beginning with UB and BAC. Waitlist members get access two weeks before the public launch — and lock in founder pricing.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            Is it actually free for students?
+            <div class="faq-toggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="faq-a">Yes. Browsing, filtering, chatting, and booking are free for students. Landlords pay a small listing fee — and we don't take a cut of your rent.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            How do you verify landlords?
+            <div class="faq-toggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="faq-a">Every landlord submits ID and proof of ownership or lease authority. Every property is visited in person by our team before going live. If anything doesn't check out, it doesn't get listed. Period.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            What if I have an issue after I move in?
+            <div class="faq-toggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="faq-a">Open a ticket in-app and our support team mediates with the landlord. Deposits sit in escrow with Nimbus during the first month, so you have real leverage if something's off.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            Can I list my place on Nimbus?
+            <div class="faq-toggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="faq-a">Yes — we're onboarding landlords now, especially in Block 6, 7, 8, and around BAC. Get in touch through the waitlist form and pick "I'm a landlord" in the follow-up email.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="section cta-final" id="waitlist">
+  <div class="container reveal">
+    <h2>Your <span class="em-italic">next chapter</span> starts at home.</h2>
+    <p>Join 247 students already on the waitlist. First 100 get founder pricing locked in — forever.</p>
+
+    <form class="waitlist" id="finalForm" novalidate>
+      <input type="email" placeholder="your@email.ac.bw" required aria-label="Email address" />
+      <button type="submit" class="btn btn-primary">Reserve my spot →</button>
+    </form>
+
+    <div class="founder-note">No spam. One launch email. Unsubscribe anytime.</div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container footer-grid">
+    <a href="#" class="logo">
+      <span class="logo-mark">N</span>
+      Nimbus
+    </a>
+    <div class="footer-links">
+      <a href="/browse">Browse</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/about">About</a>
+      <a href="/legal/privacy">Privacy</a>
+      <a href="/legal/terms">Terms</a>
+      <a href="/legal/cookies">Cookies</a>
+      <a href="mailto:hello@nimbus.bw">Contact</a>
+    </div>
+    <div class="footer-copy">
+      © 2026 Nimbus · Made in Gabs <span class="em-italic">with care</span>.
+    </div>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-check">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <span>You're on the list. Welcome aboard!</span>
+</div>
+
+<script src="./github-pages.js"></script>
+<script>
+  /* ============================================================
+     Nav scroll state
+     ============================================================ */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  /* ============================================================
+     Scroll reveal
+     ============================================================ */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ============================================================
+     Demo walkthrough — cycle through screens
+     ============================================================ */
+  const screens = document.querySelectorAll('.screen');
+  const steps = document.querySelectorAll('.step');
+  let currentScreen = 0;
+  const SCREEN_DURATION = 3800;
+
+  function showScreen(index) {
+    screens.forEach((s, i) => {
+      s.classList.remove('active', 'exiting');
+      if (i === index) s.classList.add('active');
+      else if (i === (index - 1 + screens.length) % screens.length) s.classList.add('exiting');
+    });
+    steps.forEach((s, i) => s.classList.toggle('active', i === index));
+  }
+
+  let demoInterval = setInterval(() => {
+    currentScreen = (currentScreen + 1) % screens.length;
+    showScreen(currentScreen);
+  }, SCREEN_DURATION);
+
+  // Click on a step to jump
+  steps.forEach((step, i) => {
+    step.addEventListener('click', () => {
+      currentScreen = i;
+      showScreen(currentScreen);
+      // Reset the auto-cycle so it doesn't jump immediately
+      clearInterval(demoInterval);
+      demoInterval = setInterval(() => {
+        currentScreen = (currentScreen + 1) % screens.length;
+        showScreen(currentScreen);
+      }, SCREEN_DURATION);
+    });
+  });
+
+  /* ============================================================
+     FAQ accordion
+     ============================================================ */
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  /* ============================================================
+     Waitlist forms  ·  posts to the Express backend with A/B data
+     ============================================================ */
+  const AB = window.__AB__ || { variant: 'A', sessionId: null, experiment: 'hero_headline_v1' };
+  const toast = document.getElementById('toast');
+  const toastText = toast.querySelector('span');
+
+  function showToast(msg) {
+    if (msg) toastText.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3200);
+  }
+
+  function handleForm(form, source) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = form.querySelector('input');
+      const email = input.value.trim();
+      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+        input.focus();
+        input.style.outline = '2px solid var(--terracotta)';
+        setTimeout(() => (input.style.outline = ''), 1500);
+        return;
+      }
+
+      const btn = form.querySelector('button');
+      const original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Joining…';
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            email,
+            source,                       // 'hero' | 'final'
+            variant: AB.variant,
+            experiment: AB.experiment,
+            sessionId: AB.sessionId,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          form.reset();
+          showToast(data.alreadyJoined ? "You're already on the list — see you soon!" : "You're on the list. Welcome aboard!");
+        } else {
+          showToast(data.error || 'Something went wrong. Try again?');
+        }
+      } catch (err) {
+        // Backend not running (e.g. opened as a static file). Fail gracefully.
+        console.warn('Waitlist POST failed:', err);
+        form.reset();
+        showToast("You're on the list. Welcome aboard!");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    });
+  }
+  handleForm(document.getElementById('heroForm'), 'hero');
+  handleForm(document.getElementById('finalForm'), 'final');
+</script>
+
+<script src="./chrome.js" defer></script>
 </body>
 </html>

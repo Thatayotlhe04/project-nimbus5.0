@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Request to book · Nimbus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./app.css" />
+<style>
+  .book-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; align-items: start; padding: 24px 0 40px; }
+  h1 { font-size: clamp(26px, 3.4vw, 38px); margin-bottom: 18px; }
+  .summary { background: var(--cream-2); border-radius: var(--r-md); padding: 18px; }
+  .summary .row { display: flex; justify-content: space-between; padding: 7px 0; font-size: 14.5px; }
+  .summary .row.total { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 12px; font-weight: 700; font-size: 16px; }
+  .summary .row .price { font-size: 16px; }
+  .escrow-callout { background: rgba(110,132,98,.12); border: 1px solid rgba(110,132,98,.3); border-radius: var(--r-sm);
+    padding: 14px; font-size: 13.5px; color: var(--sage-shadow); margin-top: 14px; line-height: 1.5; }
+  .pay-opts { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .pay-opt { border: 1px solid var(--line); border-radius: var(--r-sm); padding: 14px 10px; text-align: center; cursor: pointer; transition: all .15s; }
+  .pay-opt:hover { border-color: var(--sage); }
+  .pay-opt.active { border-color: var(--brown-rich); background: var(--cream-2); box-shadow: inset 0 0 0 1px var(--brown-rich); }
+  .pay-logo { width: 40px; height: 40px; border-radius: 10px; margin: 0 auto 8px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 15px; }
+  .pay-name { font-size: 12.5px; font-weight: 600; }
+  .listing-mini { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; }
+  .listing-mini .photo { width: 64px; height: 64px; border-radius: 10px; flex-shrink: 0; }
+  .err { color: var(--terracotta-2); font-size: 13px; min-height: 18px; margin-top: 4px; }
+  @media (max-width: 860px) { .book-grid { grid-template-columns: 1fr; } .summary { order: -1; } }
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="container nav-inner">
+  <a href="/" class="logo"><span class="logo-mark">N</span> Nimbus</a>
+  <div class="nav-right"><a id="backLink" href="/browse">← Back to listing</a></div>
+</div></nav>
+
+<div class="container">
+  <div id="content"><div class="book-grid"><div class="skel" style="height:300px"></div><div class="skel" style="height:300px"></div></div></div>
+</div>
+
+<div class="toast" id="toast"><span>Done</span></div>
+
+<script src="./github-pages.js"></script>
+<script>
+const TENANT_FEE_RATE = 0.08, FEE_MIN = 150, FEE_MAX = 300, COMMISSION = 0.06;
+const clamp = (n,a,b) => Math.max(a, Math.min(b, n));
+function breakdown(rent, deposit) {
+  const serviceFee = Math.round(clamp(rent*TENANT_FEE_RATE, FEE_MIN, FEE_MAX));
+  const escrowHeld = rent + deposit;
+  return { rent, deposit, serviceFee, escrowHeld, totalDueNow: escrowHeld + serviceFee };
+}
+const PROVIDERS = [
+  { id: 'orange_money', name: 'Orange Money', bg: '#ff7900', short: 'OM' },
+  { id: 'smega', name: 'Smega', bg: '#00a89c', short: 'Sm' },
+  { id: 'myzaka', name: 'MyZaka', bg: '#0a3d91', short: 'MZ' },
+];
+
+const id = window.NIMBUS_PAGE?.routeId() || location.pathname.split('/').pop();
+const campusId = new URLSearchParams(location.search).get('campus') || '';
+document.getElementById('backLink').href = `/listing/${id}${campusId ? '?campus=' + campusId : ''}`;
+let LISTING = null, provider = '';
+
+async function init() {
+  const res = await fetch(`/api/listings/${id}`);
+  if (!res.ok) { document.getElementById('content').innerHTML = '<p class="muted">Listing not found.</p>'; return; }
+  LISTING = (await res.json()).listing;
+  render();
+}
+
+function render() {
+  const l = LISTING, b = breakdown(l.rent, l.deposit);
+  document.getElementById('content').innerHTML = `
+  <h1>Request to book</h1>
+  <div class="book-grid">
+    <div>
+      <div class="listing-mini">
+        <div class="photo photo-${l.roomType}"></div>
+        <div><div style="font-family:Fraunces,serif;font-size:20px">${l.title}</div>
+        <div class="muted" style="font-size:13.5px">${l.neighbourhood}</div></div>
+      </div>
+
+      <label class="field"><span>Full name</span><input id="name" placeholder="e.g. Kabo Seretse" /></label>
+      <label class="field"><span>Email</span><input id="email" type="email" placeholder="you@students.ub.ac.bw" /></label>
+      <label class="field"><span>Phone (mobile money)</span><input id="phone" placeholder="71 234 567" /></label>
+      <label class="field"><span>Preferred move-in date</span><input id="moveIn" type="date" /></label>
+
+      <div class="field"><span style="display:block;font-size:13px;font-weight:600;color:var(--brown-soft);margin-bottom:6px">Pay deposit with</span>
+        <div class="pay-opts" id="payOpts">
+          ${PROVIDERS.map((p) => `<div class="pay-opt" data-id="${p.id}">
+            <div class="pay-logo" style="background:${p.bg}">${p.short}</div><div class="pay-name">${p.name}</div></div>`).join('')}
+        </div>
+      </div>
+
+      <button class="btn btn-accent btn-block" id="submit" style="margin-top:8px">Pay P${b.totalDueNow.toLocaleString()} into escrow</button>
+      <div class="err" id="err"></div>
+    </div>
+
+    <aside class="summary">
+      <div style="font-family:Fraunces,serif;font-size:20px;margin-bottom:6px">Payment summary</div>
+      <div class="row"><span>First month’s rent</span><span class="price">P${b.rent.toLocaleString()}</span></div>
+      <div class="row"><span>Refundable deposit</span><span class="price">P${b.deposit.toLocaleString()}</span></div>
+      <div class="row"><span>Nimbus service fee <span class="muted">(one-time)</span></span><span class="price">P${b.serviceFee.toLocaleString()}</span></div>
+      <div class="row total"><span>Total due now</span><span class="price">P${b.totalDueNow.toLocaleString()}</span></div>
+      <div class="escrow-callout">
+        🔒 <b>P${b.escrowHeld.toLocaleString()}</b> (rent + deposit) is held in Nimbus escrow.
+        The landlord is paid <b>only after you verify move-in</b> at the front door. If the room
+        isn’t as described, you’re refunded.
+      </div>
+    </aside>
+  </div>`;
+
+  document.querySelectorAll('.pay-opt').forEach((el) => el.addEventListener('click', () => {
+    document.querySelectorAll('.pay-opt').forEach((x) => x.classList.remove('active'));
+    el.classList.add('active'); provider = el.dataset.id;
+  }));
+  document.getElementById('submit').addEventListener('click', submit);
+}
+
+function showToast(msg) { const t = document.getElementById('toast'); t.querySelector('span').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+
+async function submit() {
+  const err = document.getElementById('err');
+  const body = {
+    listingId: id,
+    studentName: document.getElementById('name').value.trim(),
+    studentEmail: document.getElementById('email').value.trim(),
+    studentPhone: document.getElementById('phone').value.trim(),
+    moveInDate: document.getElementById('moveIn').value,
+    paymentProvider: provider,
+  };
+  if (!body.studentName) return (err.textContent = 'Please enter your name.');
+  if (!/^\S+@\S+\.\S+$/.test(body.studentEmail)) return (err.textContent = 'Please enter a valid email.');
+  if (!body.moveInDate) return (err.textContent = 'Please choose a move-in date.');
+  if (!provider) return (err.textContent = 'Choose a mobile-money method.');
+  err.textContent = '';
+
+  const btn = document.getElementById('submit'); btn.disabled = true; btn.textContent = 'Contacting ' + PROVIDERS.find((p)=>p.id===provider).name + '…';
+  try {
+    const res = await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.error || 'Something went wrong.'; btn.disabled = false; btn.textContent = 'Try again'; return; }
+    showToast('Payment captured into escrow ✓');
+    setTimeout(() => (location.href = window.NIMBUS_PAGE?.href(`/booking/${data.reference}`) || `/booking/${data.reference}`), 800);
+  } catch (e) {
+    err.textContent = 'Network error. Please try again.'; btn.disabled = false; btn.textContent = 'Try again';
+  }
+}
+init();
+</script>
+<script src="./chrome.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About · Nimbus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./app.css" />
+<style>
+  .prose { max-width: 720px; margin: 0 auto; padding: 40px 0; }
+  .prose h1 { font-size: clamp(30px,4vw,46px); margin-bottom: 8px; }
+  .lead { font-size: 19px; color: var(--brown-soft); margin: 12px 0 28px; }
+  .prose h2 { font-size: 26px; margin: 34px 0 10px; }
+  .prose p { font-size: 16.5px; margin: 12px 0; }
+  .values { display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin-top: 14px; }
+  .value { background: var(--cream); border:1px solid var(--line); border-radius: var(--r-sm); padding:18px; }
+  .value h3 { font-size: 18px; margin-bottom: 6px; }
+  .mission { background: var(--brown-rich); color: var(--cream); border-radius: var(--r-lg); padding: 30px; margin: 8px 0 6px; }
+  .mission p { font-family:'Fraunces',serif; font-size: 24px; line-height:1.35; margin:0; }
+  @media (max-width:760px){ .values{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="container nav-inner">
+  <a href="/" class="logo"><span class="logo-mark">N</span> Nimbus</a>
+  <div class="nav-right"><a href="/browse">Browse</a><a href="/pricing">Pricing</a><a href="/about">About</a><a href="/#waitlist" class="btn btn-ghost">Join waitlist</a></div>
+</div></nav>
+
+<div class="container"><div class="prose">
+  <h1>Housing shouldn’t be the hardest part of your degree.</h1>
+  <p class="lead">Nimbus is a student accommodation marketplace built in Gaborone, for students in Gaborone.</p>
+
+  <div class="mission">
+    <p>Our mission: make finding a safe, fairly-priced home near campus as simple, honest, and stress-free as it should have been all along.</p>
+  </div>
+
+  <h2>Why we built it</h2>
+  <p>Every semester the same scramble repeats — WhatsApp groups full of half-real listings, deposits sent to strangers, wasted combi trips across town to see a room that doesn’t match the photos, and prices that climb the moment someone hears “student.” It costs students money they don’t have and time they can’t spare.</p>
+  <p>Nimbus replaces that with verified listings, transparent pricing, real commute information, and an escrow system so your deposit is never at the mercy of a stranger’s honesty.</p>
+
+  <h2>How we’re different</h2>
+  <div class="values">
+    <div class="value"><h3>Verified</h3><p style="font-size:14.5px;margin:0">Real homes, checked by our team — not anonymous posts.</p></div>
+    <div class="value"><h3>Protected</h3><p style="font-size:14.5px;margin:0">Escrow holds your money until you confirm the room at the door.</p></div>
+    <div class="value"><h3>Smart</h3><p style="font-size:14.5px;margin:0">Combi-route scoring by Heisenberg AI (Nubia × Nimbus) ranks homes by your real daily commute.</p></div>
+  </div>
+
+  <h2>Built with Nubia</h2>
+  <p>Nimbus shares its routing intelligence with <b>Nubia</b>, our student platform. The “Heisenberg AI” that scores how easy each home’s combi trip to campus really is is powered by Nubia’s engine — one brain, two products, both in service of students.</p>
+
+  <h2>Where we’re going</h2>
+  <p>We’re starting with Gaborone’s student neighbourhoods and the campuses around them, then expanding to moving help, prepaid utilities, and a portal universities can offer their own students. If that sounds like something you want to exist, <a href="/#waitlist" style="border-bottom:1px solid currentColor">join the waitlist</a>.</p>
+</div></div>
+
+<div id="site-footer"></div>
+<script src="./github-pages.js"></script>
+<script src="./chrome.js" defer></script>
+</body>
+</html>
