@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="/app.css" />
+<link rel="stylesheet" href="./app.css" />
 <style>
   .crumbs { padding: 16px 0; font-size: 14px; color: var(--brown-soft); }
   .hero-photo { height: clamp(220px, 34vw, 380px); border-radius: var(--r-md); margin-bottom: 22px; }
@@ -48,9 +48,10 @@
   <span>© 2026 Nimbus · Gaborone</span><a href="/browse">← Back to results</a>
 </div></footer>
 
+<script src="./github-pages.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const id = location.pathname.split('/').pop();
+const id = window.NIMBUS_PAGE?.routeId() || location.pathname.split('/').pop();
 const params = new URLSearchParams(location.search);
 let campusId = params.get('campus') || '';
 let DATA = null;
@@ -138,6 +139,6 @@ function drawMap(l) {
 
 fetchData();
 </script>
-<script src="/chrome.js" defer></script>
+<script src="./chrome.js" defer></script>
 </body>
 </html>

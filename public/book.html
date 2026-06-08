@@ -6,7 +6,7 @@
 <title>Request to book · Nimbus</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/app.css" />
+<link rel="stylesheet" href="./app.css" />
 <style>
   .book-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; align-items: start; padding: 24px 0 40px; }
   h1 { font-size: clamp(26px, 3.4vw, 38px); margin-bottom: 18px; }
@@ -41,6 +41,7 @@
 
 <div class="toast" id="toast"><span>Done</span></div>
 
+<script src="./github-pages.js"></script>
 <script>
 const TENANT_FEE_RATE = 0.08, FEE_MIN = 150, FEE_MAX = 300, COMMISSION = 0.06;
 const clamp = (n,a,b) => Math.max(a, Math.min(b, n));
@@ -55,7 +56,7 @@ const PROVIDERS = [
   { id: 'myzaka', name: 'MyZaka', bg: '#0a3d91', short: 'MZ' },
 ];
 
-const id = location.pathname.split('/').pop();
+const id = window.NIMBUS_PAGE?.routeId() || location.pathname.split('/').pop();
 const campusId = new URLSearchParams(location.search).get('campus') || '';
 document.getElementById('backLink').href = `/listing/${id}${campusId ? '?campus=' + campusId : ''}`;
 let LISTING = null, provider = '';
@@ -140,13 +141,13 @@ async function submit() {
     const data = await res.json();
     if (!res.ok) { err.textContent = data.error || 'Something went wrong.'; btn.disabled = false; btn.textContent = 'Try again'; return; }
     showToast('Payment captured into escrow ✓');
-    setTimeout(() => (location.href = `/booking/${data.reference}`), 800);
+    setTimeout(() => (location.href = window.NIMBUS_PAGE?.href(`/booking/${data.reference}`) || `/booking/${data.reference}`), 800);
   } catch (e) {
     err.textContent = 'Network error. Please try again.'; btn.disabled = false; btn.textContent = 'Try again';
   }
 }
 init();
 </script>
-<script src="/chrome.js" defer></script>
+<script src="./chrome.js" defer></script>
 </body>
 </html>

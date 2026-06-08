@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="/app.css" />
+<link rel="stylesheet" href="./app.css" />
 <style>
   .browse-head { padding: 22px 0 8px; }
   .browse-head h1 { font-size: clamp(26px, 3.4vw, 40px); margin-bottom: 6px; }
@@ -109,6 +109,7 @@
   <span>© 2026 Nimbus · Gaborone</span><a href="/">← Back to home</a>
 </div></footer>
 
+<script src="./github-pages.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const $ = (s) => document.querySelector(s);
@@ -253,6 +254,6 @@ $('#verifiedOnly').addEventListener('change', (e) => { state.verifiedOnly = e.ta
 initMap();
 loadCampuses().then(load);
 </script>
-<script src="/chrome.js" defer></script>
+<script src="./chrome.js" defer></script>
 </body>
 </html>
