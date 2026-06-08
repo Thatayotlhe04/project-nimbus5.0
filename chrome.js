@@ -6,6 +6,20 @@
     document.cookie = `nimbus_cookie_consent=${v}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
     const b = document.getElementById('nimbus-cookie-banner'); if (b) b.remove();
   }
+  async function setPandoraModelTraining(enabled) {
+    try {
+      await fetch('/api/pandora/preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model_training: enabled })
+      });
+      document.cookie = `nimbus_pandora_model_training=${enabled ? 'on' : 'off'}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+      alert(enabled ? 'Pandora model-training data is on.' : 'Pandora model-training data is off for future activity.');
+    } catch {
+      document.cookie = `nimbus_pandora_model_training=${enabled ? 'on' : 'off'}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+      alert('Preference saved locally. The server will pick it up on your next request.');
+    }
+  }
 
   if (!getCookie('nimbus_cookie_consent')) {
     const style = document.createElement('style');
@@ -48,9 +62,14 @@
             <a href="/about">About &amp; mission</a><a href="/#waitlist">Join waitlist</a></div></div>
         <div><div style="font-weight:700;margin-bottom:8px">Legal</div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <a href="/legal/privacy">Privacy</a><a href="/legal/terms">Terms</a><a href="/legal/cookies">Cookies</a></div></div>
+            <a href="/legal/privacy">Privacy</a><a href="/legal/terms">Terms</a><a href="/legal/cookies">Cookies</a>
+            <button type="button" id="pandora-opt-toggle" style="border:0;background:transparent;color:inherit;text-align:left;padding:0;font:inherit;cursor:pointer">Model-training opt-out</button></div></div>
       </div>
       <div style="border-top:1px solid var(--line);margin-top:22px;padding-top:16px;font-size:13px" class="muted">© 2026 Nimbus · Gaborone, Botswana</div>
     </div></footer>`;
+    document.getElementById('pandora-opt-toggle')?.addEventListener('click', () => {
+      const current = getCookie('nimbus_pandora_model_training') !== 'off';
+      setPandoraModelTraining(!current);
+    });
   }
 })();

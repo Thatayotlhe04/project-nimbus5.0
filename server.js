@@ -17,6 +17,13 @@ import { bookingBreakdown } from './fees.js';
 import * as payments from './payments/providers.js';
 import * as subs from './payments/subscriptions.js';
 import * as db from './db.js';
+import {
+  PANDORA_MODEL_TRAINING_COOKIE,
+  anonymousUserId,
+  modelTrainingAllowed,
+  scopeFor,
+  trackPandora,
+} from './pandora.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -41,6 +48,16 @@ const COOKIE_OPTS = {
 app.use(express.static(PUBLIC_DIR, { index: false }));
 
 app.get('/healthz', (_req, res) => res.json({ ok: true, supabase: db.usingSupabase() }));
+
+app.get('/api/pandora/preference', (req, res) => {
+  res.json({ model_training: modelTrainingAllowed(req) });
+});
+
+app.post('/api/pandora/preference', (req, res) => {
+  const enabled = req.body?.model_training !== false;
+  res.cookie(PANDORA_MODEL_TRAINING_COOKIE, enabled ? 'on' : 'off', COOKIE_OPTS);
+  res.json({ model_training: enabled });
+});
 
 // ---------- Landing page with A/B assignment ----------
 app.get('/', async (req, res, next) => {
@@ -95,6 +112,20 @@ app.get('/api/listings', async (req, res) => {
       combiOnly: req.query.combiOnly === 'true',
       verifiedOnly: req.query.verifiedOnly === 'true',
     }, routes, campuses, scoresById);
+    void trackPandora(req, {
+      type: 'listing.searched',
+      data: {
+        ...(scopeFor(req) === 'model_training' ? { query: req.query.q || req.query.campus || '' } : {}),
+        filters: {
+          campusId: req.query.campus || null,
+          roomType: req.query.roomType || null,
+          maxRent: req.query.maxRent || null,
+          combiOnly: req.query.combiOnly === 'true',
+          verifiedOnly: req.query.verifiedOnly === 'true',
+        },
+        resultCount: result.count ?? result.listings?.length ?? 0,
+      },
+    });
     res.json(result);
   } catch (e) { console.error('[listings]', e.message); res.status(500).json({ error: 'failed' }); }
 });
@@ -106,6 +137,10 @@ app.get('/api/listings/:id', async (req, res) => {
     const [routes, campuses] = await Promise.all([db.getRoutes(), db.getCampuses()]);
     const campus = req.query.campus ? campuses.find((c) => c.id === req.query.campus) : null;
     const scores = campus ? await heisenbergScore([listing], campus, routes) : {};
+    void trackPandora(req, {
+      type: 'listing.viewed',
+      data: { listingId: listing.id, priceBwp: Number(listing.rent) || undefined },
+    });
     res.json({ listing: enrichListing(listing, campus, routes, scores[listing.id]), campuses });
   } catch (e) { console.error('[listing]', e.message); res.status(500).json({ error: 'failed' }); }
 });
@@ -156,6 +191,11 @@ app.post('/api/bookings', async (req, res) => {
       listingId, studentName: studentName.trim(), studentEmail, studentPhone,
       moveInDate, roomType: listing.roomType, paymentProvider, breakdown,
       providerRef: capture.providerRef,
+    });
+    void trackPandora(req, {
+      type: 'booking.requested',
+      userId: anonymousUserId(req),
+      data: { listingId, moveInDate },
     });
 
     res.status(201).json({ ok: true, reference: booking.reference, booking });
